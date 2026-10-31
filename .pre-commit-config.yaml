@@ -1,0 +1,26 @@
+# Git hooks run by prek (https://prek.j178.dev). `pnpm install` installs them.
+default_install_hook_types: [pre-commit]
+
+repos:
+  # Rust implementations bundled with prek; their version follows @j178/prek in package.json.
+  - repo: builtin
+    hooks:
+      - id: trailing-whitespace
+        stages: [pre-commit]
+      - id: check-merge-conflict
+        # Also check outside a merge or rebase, e.g. after a conflicted `git stash pop`.
+        args: [--assume-in-merge]
+        stages: [pre-commit]
+      - id: check-added-large-files
+        stages: [pre-commit]
+      - id: check-yaml
+        # pnpm-lock.yaml holds two YAML documents.
+        args: [--allow-multiple-documents]
+        stages: [pre-commit]
+      - id: check-json
+        stages: [pre-commit]
+  - repo: https://github.com/betterleaks/betterleaks
+    rev: 81aff7a638638aae3a659845d089043e1d8fe9ac # frozen: v1.9.0
+    hooks:
+      - id: betterleaks
+        stages: [pre-commit]

@@ -20,16 +20,16 @@ pnpm add -D oxlint @sonsu-lee/oxlint-config
 
 ```ts
 // oxlint.config.ts
-import { defineConfig } from "oxlint";
-import { preset } from "@sonsu-lee/oxlint-config";
+import { preset } from '@sonsu-lee/oxlint-config';
+import { defineConfig } from 'oxlint';
 
-export default defineConfig(preset({ typeAware: true }, { rules: { "no-console": "off" } }));
+export default defineConfig(preset({ typeAware: true }, { rules: { 'no-console': 'off' } }));
 ```
 
 Add `oxlint-tsgolint` when you enable `typeAware`.
 
 | Package | Description |
-|---|---|
+| --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint preset factory |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Custom lint rules, run by Oxlint as a JS plugin |
 

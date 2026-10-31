@@ -8,6 +8,9 @@
     "url": "git+https://github.com/sonsu-lee/style-guide.git",
     "directory": "packages/oxlint-config"
   },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -15,22 +18,19 @@
       "default": "./dist/index.mjs"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsdown",
     "test": "vitest run",
     "typecheck": "tsc",
     "lint": "oxlint"
   },
-  "peerDependencies": {
-    "oxlint": "^1.90.0"
-  },
   "devDependencies": {
     "oxlint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "oxlint": "^1.90.0"
   }
 }

@@ -8,6 +8,9 @@
     "url": "git+https://github.com/sonsu-lee/style-guide.git",
     "directory": "packages/oxlint-plugin"
   },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -15,9 +18,6 @@
       "default": "./dist/index.mjs"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsdown",
     "test": "vitest run --passWithNoTests",

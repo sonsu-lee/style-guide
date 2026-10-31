@@ -1,1 +1,1 @@
-export { preset, type Options } from "./preset.ts";
+export { preset, type Options } from './preset.ts';

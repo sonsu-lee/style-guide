@@ -19,6 +19,8 @@ Toolchain versions are pinned in the repository:
 | `pnpm test` | Unit tests in every package |
 | `pnpm typecheck` | `tsc` in every package |
 | `pnpm lint` | Each package lints itself with its own preset or rules |
+| `pnpm format` | Formats every file in the repository with oxfmt |
+| `pnpm format:check` | Fails if `pnpm format` would change any file |
 | `pnpm build` | Builds every package with tsdown |
 
 ## Adding a rule

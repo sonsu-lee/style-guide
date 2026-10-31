@@ -14,9 +14,10 @@ case "$PRE_COMMIT_REMOTE_BRANCH" in
 esac
 
 # 2. Commits on a remote-tracking branch were already published; check the
-#    rest, oldest first.
+#    rest, oldest first. --no-show-signature keeps log.showSignature from
+#    putting the signature check above the message.
 for commit in $(git rev-list --reverse "$PRE_COMMIT_TO_REF" --not --remotes); do
-  if ! git log -1 --format=%B "$commit" | pnpm exec commitlint; then
+  if ! git log -1 --no-show-signature --format=%B "$commit" | pnpm exec commitlint; then
     echo "Commit $(git rev-parse --short "$commit") does not follow Conventional Commits." >&2
     failed=1
   fi

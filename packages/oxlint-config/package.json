@@ -1,0 +1,36 @@
+{
+  "name": "@sonsu-lee/oxlint-config",
+  "version": "0.0.0",
+  "description": "Oxlint preset with selectable profiles and @sonsu-lee/oxlint-plugin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonsu-lee/style-guide.git",
+    "directory": "packages/oxlint-config"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "lint": "oxlint"
+  },
+  "peerDependencies": {
+    "oxlint": "^1.90.0"
+  },
+  "devDependencies": {
+    "oxlint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

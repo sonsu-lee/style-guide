@@ -1,5 +1,5 @@
 # Git hooks run by prek (https://prek.j178.dev). `pnpm install` installs them.
-default_install_hook_types: [pre-commit]
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
 
 repos:
   # Rust implementations bundled with prek; their version follows @j178/prek in package.json.
@@ -24,3 +24,19 @@ repos:
     hooks:
       - id: betterleaks
         stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: commitlint
+        name: commit message follows Conventional Commits
+        # prek appends the path of the message file.
+        entry: pnpm exec commitlint --edit
+        language: system
+        always_run: true
+        stages: [commit-msg]
+      - id: check-push
+        name: pushed branch name and commits follow the conventions
+        entry: sh scripts/check-push.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

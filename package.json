@@ -7,7 +7,8 @@
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "prepare": "prek install --allow-missing-config"
   },
   "devEngines": {
     "runtime": {
@@ -15,5 +16,8 @@
       "version": "^24.22.2",
       "onFail": "download"
     }
+  },
+  "devDependencies": {
+    "@j178/prek": "0.5.9"
   }
 }

@@ -7,7 +7,7 @@ This document describes how the packages in this repository fit together and whi
 Oxlint is the primary linter. ESLint runs only the rules Oxlint cannot run. Formatting is done by oxfmt, never by lint rules.
 
 | Layer | Runs in | Type information |
-|---|---|---|
+| --- | --- | --- |
 | Oxlint built-in rules | Oxlint | Yes, through tsgolint |
 | `@sonsu-lee/oxlint-plugin` (custom AST rules) | Oxlint as a JS plugin; also runs in ESLint | No |
 | `@sonsu-lee/eslint-plugin` (custom typed rules, planned) | ESLint only | Yes, through typescript-eslint |
@@ -15,7 +15,7 @@ Oxlint is the primary linter. ESLint runs only the rules Oxlint cannot run. Form
 Packages are split by the linter that runs them, not by rule topic.
 
 | Package | Rule namespace | Status |
-|---|---|---|
+| --- | --- | --- |
 | `@sonsu-lee/oxlint-config` | — | Scaffold |
 | `@sonsu-lee/oxlint-plugin` | `sonsu-lee` | Scaffold, no rules yet |
 | `@sonsu-lee/eslint-plugin` | `sonsu-lee-eslint` | Planned for the first rule that needs type information |
@@ -51,7 +51,7 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 ### `packages/oxlint-config`
 
 | Path | Contents |
-|---|---|
+| --- | --- |
 | `src/index.ts` | Public API. Exports only `preset` and the `Options` type |
 | `src/preset.ts` | Builds the root config: root-only fields, then the selected configs, then the user's config |
 | `src/configs/*.ts` | One file per profile. Only fields that `extends` inherits |
@@ -59,12 +59,12 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 
 ### `packages/oxlint-plugin`
 
-| Path | Contents |
-|---|---|
-| `src/index.ts` | `eslintCompatPlugin({ meta, rules })` |
-| `src/rules/<rule-id>.ts` | One rule, written with `createOnce` |
+| Path                          | Contents                                      |
+| ----------------------------- | --------------------------------------------- |
+| `src/index.ts`                | `eslintCompatPlugin({ meta, rules })`         |
+| `src/rules/<rule-id>.ts`      | One rule, written with `createOnce`           |
 | `src/rules/<rule-id>.test.ts` | `RuleTester` cases taken from the rule's docs |
-| `docs/rules/<rule-id>.md` | Code the rule reports and code it allows |
+| `docs/rules/<rule-id>.md`     | Code the rule reports and code it allows      |
 
 ## Invariants
 
@@ -79,7 +79,7 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 ## Merging `userConfig`
 
 | Field | Behavior |
-|---|---|
+| --- | --- |
 | `options.ignores` | Appended after the default ignore patterns |
 | `ignorePatterns` | Appended after `options.ignores` |
 | `extends` | Placed after the preset's configs, so it takes precedence |

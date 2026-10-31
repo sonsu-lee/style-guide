@@ -20,16 +20,16 @@ pnpm add -D oxlint @sonsu-lee/oxlint-config
 
 ```ts
 // oxlint.config.ts
-import { defineConfig } from "oxlint";
-import { preset } from "@sonsu-lee/oxlint-config";
+import { preset } from '@sonsu-lee/oxlint-config';
+import { defineConfig } from 'oxlint';
 
-export default defineConfig(preset({ typeAware: true }, { rules: { "no-console": "off" } }));
+export default defineConfig(preset({ typeAware: true }, { rules: { 'no-console': 'off' } }));
 ```
 
 `typeAware`를 켜려면 `oxlint-tsgolint`도 함께 설치합니다.
 
 | 패키지 | 설명 |
-|---|---|
+| --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint 프리셋을 만드는 factory 함수 |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Oxlint가 JS 플러그인으로 실행하는 커스텀 규칙 |
 

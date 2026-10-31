@@ -14,14 +14,11 @@ For `typeAware: true`, also install `oxlint-tsgolint`. Your tsconfig must be com
 
 ```ts
 // oxlint.config.ts
-import { defineConfig } from "oxlint";
-import { preset } from "@sonsu-lee/oxlint-config";
+import { preset } from '@sonsu-lee/oxlint-config';
+import { defineConfig } from 'oxlint';
 
 export default defineConfig(
-  preset(
-    { typeAware: true, ignores: ["gen/**"] },
-    { rules: { "no-console": "off" } },
-  ),
+  preset({ typeAware: true, ignores: ['gen/**'] }, { rules: { 'no-console': 'off' } }),
 );
 ```
 
@@ -33,19 +30,19 @@ Use `preset()` as the root config. Do not put it inside another config's `extend
 
 Returns a complete Oxlint root config.
 
-| Option | Default | Description |
-|---|---|---|
-| `ignores` | `[]` | Paths to ignore in addition to `**/dist/**` and `**/coverage/**` |
-| `typeAware` | `false` | Run rules that need type information |
+| Option      | Default | Description                                                      |
+| ----------- | ------- | ---------------------------------------------------------------- |
+| `ignores`   | `[]`    | Paths to ignore in addition to `**/dist/**` and `**/coverage/**` |
+| `typeAware` | `false` | Run rules that need type information                             |
 
 `userConfig` is merged as follows:
 
-| Field | Behavior |
-|---|---|
-| `ignorePatterns` | Appended after the defaults and `ignores` |
-| `extends` | Applied after the preset, so it takes precedence |
-| `options` | Overrides the preset |
-| Other fields | Used as given |
+| Field            | Behavior                                         |
+| ---------------- | ------------------------------------------------ |
+| `ignorePatterns` | Appended after the defaults and `ignores`        |
+| `extends`        | Applied after the preset, so it takes precedence |
+| `options`        | Overrides the preset                             |
+| Other fields     | Used as given                                    |
 
 ## Contributing
 

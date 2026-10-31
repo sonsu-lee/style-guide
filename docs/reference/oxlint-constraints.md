@@ -9,13 +9,13 @@ Evidence: **experiment** = reproduced locally with a minimal config; **docs** = 
 Each field was placed alone in an extended config, with an empty root config. `oxlint.config.ts` and `.oxlintrc.json` behaved the same. (experiment)
 
 | Field | Inherited through `extends` | Upstream |
-|---|---|---|
-| `rules`, `plugins`, `jsPlugins`, `overrides`, `categories` | Yes | |
+| --- | --- | --- |
+| `rules`, `plugins`, `jsPlugins`, `overrides`, `categories` | Yes |  |
 | `globals` | No | [oxc#16662](https://github.com/oxc-project/oxc/issues/16662) |
 | `env` | No | [oxc#20087](https://github.com/oxc-project/oxc/issues/20087) |
 | `settings` | No | [oxc#28047](https://github.com/oxc-project/oxc/issues/28047) |
 | `ignorePatterns` | No | [oxc#10223](https://github.com/oxc-project/oxc/issues/10223), [oxc#16079](https://github.com/oxc-project/oxc/issues/16079) |
-| `options.typeAware` | Root config only (docs) | |
+| `options.typeAware` | Root config only (docs) |  |
 
 This looks like an implementation gap, not a design choice:
 
@@ -28,7 +28,7 @@ Related: [oxc#20067](https://github.com/oxc-project/oxc/issues/20067) reports ex
 ## Plugins
 
 | Config | Enabled plugins |
-|---|---|
+| --- | --- |
 | No `plugins` field | Default set: `unicorn`, `typescript`, `oxc`, plus ESLint core rules |
 | Root `plugins: ["eslint"]` | Only the listed plugins; defaults are removed |
 | `plugins` only inside `extends` | Default set plus the listed plugins; defaults cannot be removed |
@@ -59,7 +59,7 @@ ESLint core rules stayed available in every case. (experiment)
 ## Rules that conflict with NestJS
 
 | Rule | Behavior in Nest code |
-|---|---|
+| --- | --- |
 | `typescript/consistent-type-imports` | Reports a class imported only for constructor injection, even with `emitDecoratorMetadata` enabled. Applying the fix makes the injection metadata `Object` and breaks DI at runtime |
 | `typescript/no-extraneous-class` | Reports `@Module({}) export class AppModule {}`; `allowWithDecorator: true` avoids it |
 | `class-methods-use-this` | Reports controller and service methods that do not use `this` |

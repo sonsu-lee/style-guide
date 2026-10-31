@@ -2,13 +2,18 @@
   "name": "style-guide",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@12.16.1",
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "prepare": "prek install --allow-missing-config"
+  },
+  "devDependencies": {
+    "@j178/prek": "0.5.9",
+    "oxfmt": "catalog:"
   },
   "devEngines": {
     "runtime": {
@@ -17,7 +22,5 @@
       "onFail": "download"
     }
   },
-  "devDependencies": {
-    "@j178/prek": "0.5.9"
-  }
+  "packageManager": "pnpm@12.16.1"
 }

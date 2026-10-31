@@ -16,10 +16,10 @@ pnpm add -D oxlint @sonsu-lee/oxlint-plugin
 
 ```ts
 // oxlint.config.ts
-import { defineConfig } from "oxlint";
+import { defineConfig } from 'oxlint';
 
 export default defineConfig({
-  jsPlugins: [{ name: "sonsu-lee", specifier: "@sonsu-lee/oxlint-plugin" }],
+  jsPlugins: [{ name: 'sonsu-lee', specifier: '@sonsu-lee/oxlint-plugin' }],
   rules: {},
 });
 ```

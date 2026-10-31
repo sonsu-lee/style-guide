@@ -1,6 +1,7 @@
-import type { OxlintConfig } from "oxlint";
-import { base } from "./configs/base.ts";
-import { defaultIgnores } from "./ignores.ts";
+import type { OxlintConfig } from 'oxlint';
+
+import { base } from './configs/base.ts';
+import { defaultIgnores } from './ignores.ts';
 
 export interface Options {
   /** Paths to ignore in addition to the defaults. */
@@ -22,7 +23,11 @@ export function preset(options: Options = {}, userConfig: OxlintConfig = {}): Ox
   return {
     ...userConfig,
     extends: extendsConfigs,
-    ignorePatterns: [...defaultIgnores, ...(options.ignores ?? []), ...(userConfig.ignorePatterns ?? [])],
+    ignorePatterns: [
+      ...defaultIgnores,
+      ...(options.ignores ?? []),
+      ...(userConfig.ignorePatterns ?? []),
+    ],
     options: { typeAware: options.typeAware ?? false, ...userConfig.options },
   };
 }

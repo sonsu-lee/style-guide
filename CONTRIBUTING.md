@@ -9,17 +9,19 @@ pnpm install
 Toolchain versions are pinned in the repository:
 
 | Where | What | Read by |
-|---|---|---|
+| --- | --- | --- |
 | `.node-version` | Node.js major version (`24`) | fnm, mise (after `mise settings add idiomatic_version_file_enable_tools node`), `actions/setup-node`. nvm does not read it |
 | `package.json` `packageManager` | Exact pnpm version | pnpm, Corepack, mise, nodeup |
 | `package.json` `devEngines.runtime` | Node.js range (`^24.22.2`, `onFail: "download"`) | pnpm downloads that Node.js and uses it for `pnpm run` scripts. A bare `node` in your shell still comes from your version manager unless you run `pnpm shim add node` |
 
-| Command | What it does |
-|---|---|
-| `pnpm test` | Unit tests in every package |
-| `pnpm typecheck` | `tsc` in every package |
-| `pnpm lint` | Each package lints itself with its own preset or rules |
-| `pnpm build` | Builds every package with tsdown |
+| Command             | What it does                                           |
+| ------------------- | ------------------------------------------------------ |
+| `pnpm test`         | Unit tests in every package                            |
+| `pnpm typecheck`    | `tsc` in every package                                 |
+| `pnpm lint`         | Each package lints itself with its own preset or rules |
+| `pnpm format`       | Formats every file in the repository with oxfmt        |
+| `pnpm format:check` | Fails if `pnpm format` would change any file           |
+| `pnpm build`        | Builds every package with tsdown                       |
 
 ## Adding a rule
 
@@ -41,7 +43,7 @@ Rule guidelines:
 ## Naming
 
 | Target | Format | Example |
-|---|---|---|
+| --- | --- | --- |
 | Rule ID | kebab-case; `no-` for bans, `require-` or `prefer-` for requirements | `no-double-assertion` |
 | Rule export | camelCase of the rule ID | `noDoubleAssertion` |
 | messageId | camelCase noun for the problem | `doubleAssertion` |
@@ -49,7 +51,7 @@ Rule guidelines:
 | Preset option | camelCase of the profile, boolean | `typeAware: true` |
 
 | Term | Meaning | Avoid |
-|---|---|---|
+| --- | --- | --- |
 | `node` | The AST node being visited | `n`, `astNode` |
 | `context` | Rule context | `ctx` |
 | `check` | Visitor shared by several node types | `handle`, `visit` |
@@ -65,7 +67,7 @@ Add a term to this table before using a new one.
 ## Verification
 
 | Target | How |
-|---|---|
+| --- | --- |
 | Rules | `RuleTester` valid and invalid cases |
 | `preset` merging | Each row of the merge table in ARCHITECTURE.md has a test |
 | Published files | Install the `pnpm pack` tarballs in a scratch project and run Oxlint, including a project that installs only the preset |

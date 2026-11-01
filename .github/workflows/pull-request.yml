@@ -1,0 +1,62 @@
+name: Pull request
+
+on:
+  pull_request:
+    # `edited` re-runs the checks after the title or the base branch changes.
+    # Every run executes every check: a required check that is skipped on
+    # some edits would count as passing.
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  conventions:
+    runs-on: ubuntu-latest
+    steps:
+      # Full history: commitlint needs the merge base of the base and head
+      # commits.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      # Checks run from the costliest fix to the cheapest, since the first
+      # failure stops the job: a branch name cannot be fixed by a push,
+      # commits need a force-push, and the title only needs an edit.
+      - name: Branch name
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: sh scripts/check-branch-name.sh "$HEAD_REF"
+
+      - name: Set up pnpm
+        uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with:
+          cache: true
+          # The `verify` job in ci.yml saves the same store.
+          save-cache: false
+          install: false
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # The range starts at the base branch as fetched now:
+      # pull_request.base.sha is not kept current and could put base commits
+      # that the PR merged in or rebased onto into the range.
+      - name: Commit messages
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: pnpm exec commitlint --verbose --from "origin/$BASE_REF" --to "$HEAD_SHA"
+
+      # A squash merge uses the title as the commit subject and appends
+      # " (#<number>)". Lint the title alone first, because the suffix hides a
+      # trailing period, then with the suffix, so the subject on main stays
+      # within the header length limit.
+      - name: Title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          printf '%s\n' "$PR_TITLE" | pnpm exec commitlint --verbose
+          printf '%s (#%s)\n' "$PR_TITLE" "$PR_NUMBER" | pnpm exec commitlint --verbose

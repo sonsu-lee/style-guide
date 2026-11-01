@@ -34,6 +34,8 @@ Toolchain versions are pinned in the repository:
 
 prek runs `pre-push` once per push, for the first ref with new commits. It does not check a push that only gives already pushed commits a new branch name, or refs after the first in a multi-ref push.
 
+Hooks can be skipped, so CI checks every pull request again in the `conventions` job of `.github/workflows/pull-request.yml`: the head branch name, every commit that the base branch does not have yet, and the title. Editing the title or the base branch re-runs the job. A squash merge uses the title as the commit subject and appends ` (#<number>)`, so the title must pass the commit message rules both on its own and with that suffix. With a two-digit pull request number, that leaves at most 66 characters for the title.
+
 Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) with the rules in `commitlint.config.js`:
 
 - Type: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.

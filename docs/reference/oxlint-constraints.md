@@ -1,6 +1,6 @@
 # Oxlint constraints
 
-Upstream behavior the design depends on. Checked with oxlint 1.90.0, oxlint-tsgolint 7.0.2005, eslint 10.14.0, and eslint-plugin-oxlint 1.90.0 on 2026-10-31 and 2026-11-01. Re-check when upgrading Oxlint.
+Upstream behavior the design depends on. Checked with oxlint 1.90.0, oxlint-tsgolint 7.0.2005, eslint 10.14.0, and eslint-plugin-oxlint 1.90.0 on 2026-10-31 and 2026-11-01. JS plugin resolution was checked with pnpm 12.16.1. Re-check when upgrading Oxlint.
 
 Evidence: **experiment** = reproduced locally with a minimal config; **docs** = official documentation; **issue** = upstream issue tracker.
 
@@ -64,6 +64,8 @@ An extended config with `plugins: []` adds nothing. ESLint core rules stayed ava
 ## JS plugins
 
 - Relative specifiers such as `./plugin.js` are rejected inside a config provided through `extends`. Package names work. (experiment)
+- A package name specifier is resolved from the directory of the root config file, also when it comes from a config provided through `extends` (`set_config_dir` and `load_external_plugin` at oxc tag `oxlint_v1.90.0`). A plugin installed only as a dependency of a preset is found only through the `NODE_PATH` that pnpm's bin shim sets (`node_modules/.pnpm/node_modules`). Run without the shim (`node node_modules/oxlint/bin/oxlint`), Oxlint fails with `Cannot find module`. Installing the plugin directly in the project fixes it. (experiment)
+- A `file://` URL specifier works inside a config provided through `extends`, with or without the shim. (experiment)
 - A scoped package registered without an alias gets the namespace `@<scope>`. Register it as `{ name, specifier }`. (experiment)
 - The same JS plugin registered by several extended configs reports each problem once. (experiment)
 - JS plugins do not receive TypeScript type information. (docs)

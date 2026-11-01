@@ -210,6 +210,10 @@ importers:
         version: 0.75.0
 
   packages/oxlint-config:
+    dependencies:
+      '@sonsu-lee/oxlint-plugin':
+        specifier: workspace:^
+        version: link:../oxlint-plugin
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

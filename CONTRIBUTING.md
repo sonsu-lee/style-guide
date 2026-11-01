@@ -18,7 +18,7 @@ Renovate, run by the [Mend Renovate app](https://github.com/apps/renovate) with 
 
 | Command | What it does |
 | --- | --- |
-| `pnpm test` | Unit tests in every package |
+| `pnpm test` | Unit tests in every package. Run `pnpm build` first: `oxlint-config`'s profile tests run Oxlint with the built plugin. |
 | `pnpm typecheck` | `tsc` in every package |
 | `pnpm lint` | Each package lints itself with its own preset or rules. Run `pnpm build` first: `oxlint-config` loads the built plugin. |
 | `pnpm format` | Formats every file in the repository with oxfmt |
@@ -76,7 +76,7 @@ Follow the decision flow in [ARCHITECTURE.md](ARCHITECTURE.md#where-a-new-rule-g
    - Reset per-file state in `before()`. `before()` is not guaranteed to run for every file, so code that must always run goes in a `Program` visitor.
    - Use the `Rule` and `ESTree` types from `@oxlint/plugins`.
 3. `packages/oxlint-plugin/src/rules/<rule-id>.test.ts`: turn the documented examples into `RuleTester` cases from `oxlint/plugins-dev`.
-4. Register the rule in `src/index.ts` and in the package's `oxlint.config.ts`.
+4. Register the rule in `src/index.ts` and in the package's `oxlint.config.ts`, and enable it in `packages/oxlint-config/src/configs/base.ts`.
 
 Rule guidelines:
 
@@ -115,7 +115,7 @@ Add a term to this table before using a new one.
 | Rules | `RuleTester` valid and invalid cases |
 | `preset` merging | Each row of the merge table in ARCHITECTURE.md has a test |
 | Profiles | `src/profiles.test.ts` runs Oxlint on generated files for each option |
-| Published files | Install the `pnpm pack` tarballs in a scratch project and run Oxlint, including a project that installs only the preset |
+| Published files | Install the `pnpm pack` tarballs in a scratch project and run Oxlint, including a project that installs only the preset. Run Oxlint once without pnpm's bin shim (`node node_modules/oxlint/bin/oxlint`): the `NODE_PATH` the shim sets can hide a plugin that does not resolve |
 | Upstream constraints | Re-run the checks in [docs/reference/oxlint-constraints.md](docs/reference/oxlint-constraints.md) when upgrading Oxlint |
 
 ## Decisions

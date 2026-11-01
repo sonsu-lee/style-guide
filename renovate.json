@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Branches start with chore/renovate- so they pass scripts/check-branch-name.sh; branchNameStrict turns dots, underscores, and other special characters after the prefix into hyphens.",
+    "Renovate treats every branch with that prefix as its own and may delete it or rename its pull request, so other branches must not use the prefix.",
+    "Mend runs each repository about every 4 hours, so the lock file maintenance window is 12 hours wide instead of the preset's 4 hours."
+  ],
+  "extends": ["config:best-practices", ":semanticCommits", ":enablePreCommit"],
+  "branchPrefix": "chore/renovate-",
+  "branchNameStrict": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* 0-11 * * 1"]
+  },
+  "packageRules": [
+    {
+      "description": "The peer range is the oxlint support promised to users (#11), not a pinned tool version.",
+      "matchDepTypes": ["peerDependencies"],
+      "enabled": false
+    },
+    {
+      "description": "pnpm-workspace.yaml requires oxlint and @oxlint/plugins to move together.",
+      "matchPackageNames": ["oxlint", "@oxlint/plugins"],
+      "groupName": "oxlint"
+    },
+    {
+      "description": "Raise the floor of the published @oxlint/plugins range with oxlint, not only the lockfile.",
+      "matchPackageNames": ["@oxlint/plugins"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "pnpm locks the Node.js runtime from this range and Renovate reads no locked version for it, so only bump brings new Node.js releases.",
+      "matchDepTypes": ["devEngines.runtime"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "Stay on the Node.js 24 LTS line; moving to a newer LTS is a deliberate change made by hand.",
+      "matchDatasources": ["node-version"],
+      "allowedVersions": "<25"
+    }
+  ]
+}

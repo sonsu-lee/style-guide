@@ -10,9 +10,11 @@ Toolchain versions are pinned in the repository:
 
 | Where | What | Read by |
 | --- | --- | --- |
-| `.node-version` | Node.js major version (`24`) | fnm, mise (after `mise settings add idiomatic_version_file_enable_tools node`), `actions/setup-node`. nvm does not read it |
+| `.node-version` | Node.js major version | fnm, mise (after `mise settings add idiomatic_version_file_enable_tools node`), `actions/setup-node`. nvm does not read it |
 | `package.json` `packageManager` | Exact pnpm version | pnpm, Corepack, mise, nodeup |
-| `package.json` `devEngines.runtime` | Node.js range (`^24.22.2`, `onFail: "download"`) | pnpm downloads that Node.js and uses it for `pnpm run` scripts. A bare `node` in your shell still comes from your version manager unless you run `pnpm shim add node` |
+| `package.json` `devEngines.runtime` | Node.js range, with `onFail: "download"` | pnpm downloads that Node.js and uses it for `pnpm run` scripts. A bare `node` in your shell still comes from your version manager unless you run `pnpm shim add node` |
+
+Renovate, run by the [Mend Renovate app](https://github.com/apps/renovate) with the settings in `renovate.json`, opens pull requests that update these pins, the dependencies in `package.json` and `pnpm-workspace.yaml`, the hooks in `.pre-commit-config.yaml`, and the actions in `.github/workflows`, and pins any action added by tag to a commit SHA. It waits three days after an npm release, refreshes `pnpm-lock.yaml` on Mondays, and lists pending updates in the Dependency Dashboard issue.
 
 | Command             | What it does                                           |
 | ------------------- | ------------------------------------------------------ |
@@ -53,6 +55,8 @@ Branch names follow [Conventional Branch 1.1.0](https://conventionalbranch.org/v
 | `chore`   | Maintenance: dependencies, docs, CI, and refactoring |
 
 The description uses lowercase letters and digits joined by single hyphens or dots, for example `feat/issue-123-add-login-page`. `main`, `master`, and `develop` take no type. Do not use the spec's `feature` and `fix` types or AI agent types such as `claude`.
+
+Renovate's branches start with `chore/renovate-`. Do not start other branches with it: Renovate treats every branch with that prefix as its own and may delete it or rename its pull request.
 
 Check a message or name before committing or pushing:
 

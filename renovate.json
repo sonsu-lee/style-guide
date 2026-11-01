@@ -1,14 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": [
-    "Branches start with chore/renovate- so they pass scripts/check-branch-name.sh; branchNameStrict turns dots, underscores, and other special characters after the prefix into hyphens.",
-    "Renovate treats every branch with that prefix as its own and may delete it or rename its pull request, so other branches must not use the prefix.",
-    "Mend runs each repository about every 4 hours, so the lock file maintenance window is 12 hours wide instead of the preset's 4 hours."
+    "Branches start with chore/renovate- to pass scripts/check-branch-name.sh. Renovate owns every branch with this prefix and may delete it or rename its pull request, so do not use it for other branches.",
+    "branchNameStrict turns dots, underscores, and other special characters after the prefix into hyphens."
   ],
   "extends": ["config:best-practices", ":semanticCommits", ":enablePreCommit"],
   "branchPrefix": "chore/renovate-",
   "branchNameStrict": true,
   "lockFileMaintenance": {
+    "description": "Mondays 00:00-11:59 UTC (09:00-20:59 KST). Mend runs each repository about every 4 hours, so the window is wider than the preset's before 4am.",
     "enabled": true,
     "schedule": ["* 0-11 * * 1"]
   },

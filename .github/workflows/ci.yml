@@ -10,6 +10,8 @@ permissions:
   contents: read
 
 jobs:
+  # The `main` ruleset requires this job by name. Renaming it blocks every
+  # pull request until the ruleset requires the new name.
   verify:
     runs-on: ubuntu-latest
     steps:

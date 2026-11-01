@@ -67,6 +67,16 @@ Check a message or name before committing or pushing:
 | `pnpm exec commitlint --edit <file>`     | A commit message saved in a file |
 | `sh scripts/check-branch-name.sh <name>` | A branch name                    |
 
+## Merging into `main`
+
+The `main` ruleset applies to everyone, administrators included:
+
+- Changes reach `main` only through pull requests.
+- A pull request can merge only after the `verify` job in `.github/workflows/ci.yml` and the `conventions` job in `.github/workflows/pull-request.yml` pass. A pull request that is behind `main` can merge without running them again; `verify` runs on `main` after the merge.
+- `main` cannot be force-pushed or deleted.
+
+The ruleset requires each check by its job name and accepts only results reported by GitHub Actions. Renaming either job blocks every pull request until the ruleset requires the new name. `gh ruleset check main` lists the rules in effect.
+
 ## Adding a rule
 
 Follow the decision flow in [ARCHITECTURE.md](ARCHITECTURE.md#where-a-new-rule-goes) first. Write a custom rule only when no built-in or existing plugin rule covers it.

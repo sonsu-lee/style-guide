@@ -16,14 +16,14 @@ Toolchain versions are pinned in the repository:
 
 Renovate, run by the [Mend Renovate app](https://github.com/apps/renovate) with the settings in `renovate.json`, opens pull requests that update these pins, the dependencies in `package.json` and `pnpm-workspace.yaml`, the hooks in `.pre-commit-config.yaml`, and the actions in `.github/workflows`, and pins any action added by tag to a commit SHA. It waits three days after an npm release, refreshes `pnpm-lock.yaml` on Mondays, and lists pending updates in the Dependency Dashboard issue.
 
-| Command             | What it does                                           |
-| ------------------- | ------------------------------------------------------ |
-| `pnpm test`         | Unit tests in every package                            |
-| `pnpm typecheck`    | `tsc` in every package                                 |
-| `pnpm lint`         | Each package lints itself with its own preset or rules |
-| `pnpm format`       | Formats every file in the repository with oxfmt        |
-| `pnpm format:check` | Fails if `pnpm format` would change any file           |
-| `pnpm build`        | Builds every package with tsdown                       |
+| Command | What it does |
+| --- | --- |
+| `pnpm test` | Unit tests in every package |
+| `pnpm typecheck` | `tsc` in every package |
+| `pnpm lint` | Each package lints itself with its own preset or rules. Run `pnpm build` first: `oxlint-config` loads the built plugin. |
+| `pnpm format` | Formats every file in the repository with oxfmt |
+| `pnpm format:check` | Fails if `pnpm format` would change any file |
+| `pnpm build` | Builds every package with tsdown |
 
 ## Commits and branches
 

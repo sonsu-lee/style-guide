@@ -1,6 +1,6 @@
 # Oxlint constraints
 
-Upstream behavior the design depends on. Checked with oxlint 1.90.0, oxlint-tsgolint 7.0.2005, eslint 10.14.0, and eslint-plugin-oxlint 1.90.0 on 2026-10-31. Re-check when upgrading Oxlint.
+Upstream behavior the design depends on. Checked with oxlint 1.90.0, oxlint-tsgolint 7.0.2005, eslint 10.14.0, and eslint-plugin-oxlint 1.90.0 on 2026-10-31 and 2026-11-01. Re-check when upgrading Oxlint.
 
 Evidence: **experiment** = reproduced locally with a minimal config; **docs** = official documentation; **issue** = upstream issue tracker.
 
@@ -33,8 +33,33 @@ Related: [oxc#20067](https://github.com/oxc-project/oxc/issues/20067) reports ex
 | Root `plugins: ["eslint"]` | Only the listed plugins; defaults are removed |
 | `plugins` only inside `extends` | Default set plus the listed plugins; defaults cannot be removed |
 | Root `plugins: []` and `extends` with `["typescript"]` | Only the plugins listed in `extends` |
+| Root `plugins: []` and an extended config without `plugins` | Default set plus the plugins other extended configs list |
 
-ESLint core rules stayed available in every case. (experiment)
+An extended config with `plugins: []` adds nothing. ESLint core rules stayed available in every case. (experiment)
+
+## Categories, overrides, and rule names
+
+- `categories` in any extended config apply to the plugins of every config, regardless of order. (experiment)
+- A plugin enabled only in `overrides` gets category rules for the matching files only when at least one plugin is enabled outside `overrides`. (experiment)
+- A rule of a plugin enabled only in `overrides` can be configured only in an override that lists that plugin in `plugins`. A later override, extended or root, that sets the rule without listing the plugin had no effect, even with `'off'`. (experiment)
+- Brace globs work in override `files`, for example `**/*.{test,spec}.{js,jsx,ts,tsx,mjs,cjs,mts,cts}`. (experiment)
+- In `extends`, a later config wins: a later `'off'` beats an earlier `'error'`. Root `rules` win over every extended config. (experiment)
+- A rule name that does not exist fails config loading: `Rule 'no-such-rule' not found in plugin 'typescript'`. (experiment)
+- With the typescript plugin enabled, core `correctness` rules did not report TypeScript overloads, declaration merging, or abstract classes, so the `off` entries of typescript-eslint's `eslint-recommended` are not needed. (experiment)
+- Oxlint loads an `oxlint.config.ts` in a subdirectory as a nested config even when the subdirectory matches `ignorePatterns`. A nested config with `options.typeAware` fails loading. A config passed with `-c` under another file name is not picked up this way. (experiment)
+
+## Environments
+
+- Root `env: { node: true }` or `{ browser: true }` keeps the ECMAScript built-in globals. `no-global-assign` (a `correctness` rule) reports `process = {}` with `node` and `window = {}` with `browser`. (experiment)
+
+## Rule reporting
+
+- `react/rules-of-hooks` reports with the diagnostic code `react-hooks(rules-of-hooks)`. (experiment)
+- In `*.e2e-spec.ts`, `vitest/no-focused-tests` reports a global `it.only` only when `it` is imported from `vitest`; `vitest/no-identical-title` reports in both cases. In `*.spec.ts`, both rules report. (experiment)
+- With type-aware linting on, core `require-await` and `typescript/require-await` both reported the same async function. `no-implied-eval` and `prefer-promise-reject-errors` are the other core rules that have a type-aware typescript version, and all of them are in the categories the preset turns on. (experiment)
+- `typescript/ban-types` is deprecated and reports `String` together with `typescript/no-wrapper-object-types`. `react/hooks` overlaps with `react/rules-of-hooks`, and `react/react-in-jsx-scope` reports JSX without `React` in scope; both are in `suspicious`. (experiment, docs)
+- `--print-config` shows a rule turned off in an extended config as `"allow"`, not as a missing key. (experiment)
+- `vitest/expect-expect` with `assertFunctionNames: ['request.**.expect']` accepts supertest chains such as `request(server).get('/').expect(200)`. (experiment)
 
 ## JS plugins
 
@@ -50,6 +75,8 @@ ESLint core rules stayed available in every case. (experiment)
 - tsgolint supports 59 of the 61 type-aware typescript-eslint rules; `naming-convention` and `prefer-destructuring` are missing. (docs)
 - tsgolint bundles a TypeScript 7 compiler. Type-aware rules ran in a project that installs `typescript@6.0.3`. The tsconfig must not use options removed in TypeScript 7. (experiment, docs)
 - With type-aware linting off, type-aware rules in the config are skipped without an error. (experiment)
+- With `options.typeAware: true`, `--print-config` works without `oxlint-tsgolint`. Linting fails with `Failed to find tsgolint executable`. (experiment)
+- tsgolint also lints JavaScript files outside the tsconfig `include`: `typescript/require-await` reported a `.js` file in a project whose tsconfig includes only `src/**/*.ts`. (experiment)
 
 ## ESLint interop
 
@@ -57,6 +84,8 @@ ESLint core rules stayed available in every case. (experiment)
 - `eslint-plugin-oxlint`'s `buildFromConfigFile("./oxlint.config.ts")` turns off rules that come from `extends`, but not rules run through `jsPlugins`. (experiment)
 
 ## Rules that conflict with NestJS
+
+The `ts` and `ts-esm` templates of the NestJS CLI 12 (`@nestjs/schematics` 12.0.12) generate an `.oxlintrc.json` with `typescript/no-explicit-any: off`, `typescript/no-floating-promises: error`, and `env.node: true`, and lint with `oxlint --type-aware src/ test/`. Test files are `*.spec.ts` and `*.e2e-spec.ts`, and the Vitest template uses `globals: true`. (docs: package contents)
 
 | Rule | Behavior in Nest code |
 | --- | --- |

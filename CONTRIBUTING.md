@@ -114,6 +114,7 @@ Add a term to this table before using a new one.
 | --- | --- |
 | Rules | `RuleTester` valid and invalid cases |
 | `preset` merging | Each row of the merge table in ARCHITECTURE.md has a test |
+| Profiles | `src/profiles.test.ts` runs Oxlint on generated files for each option |
 | Published files | Install the `pnpm pack` tarballs in a scratch project and run Oxlint, including a project that installs only the preset |
 | Upstream constraints | Re-run the checks in [docs/reference/oxlint-constraints.md](docs/reference/oxlint-constraints.md) when upgrading Oxlint |
 

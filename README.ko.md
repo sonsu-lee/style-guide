@@ -15,7 +15,7 @@
 ## 시작하기
 
 ```sh
-pnpm add -D oxlint @sonsu-lee/oxlint-config
+pnpm add -D oxlint oxlint-tsgolint @sonsu-lee/oxlint-config
 ```
 
 ```ts
@@ -23,10 +23,10 @@ pnpm add -D oxlint @sonsu-lee/oxlint-config
 import { preset } from '@sonsu-lee/oxlint-config';
 import { defineConfig } from 'oxlint';
 
-export default defineConfig(preset({ typeAware: true }, { rules: { 'no-console': 'off' } }));
+export default defineConfig(preset({ node: true }, { rules: { 'no-console': 'off' } }));
 ```
 
-`typeAware`를 켜려면 `oxlint-tsgolint`도 함께 설치합니다.
+TypeScript와 타입 정보가 필요한 규칙이 기본으로 켜지며, 이 규칙에는 `oxlint-tsgolint`가 필요합니다. JavaScript 프로젝트에서는 `typescript: false`를 넘깁니다.
 
 | 패키지 | 설명 |
 | --- | --- |

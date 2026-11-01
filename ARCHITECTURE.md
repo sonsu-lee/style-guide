@@ -16,7 +16,7 @@ Packages are split by the linter that runs them, not by rule topic.
 
 | Package | Rule namespace | Status |
 | --- | --- | --- |
-| `@sonsu-lee/oxlint-config` | — | Scaffold |
+| `@sonsu-lee/oxlint-config` | — | Unpublished |
 | `@sonsu-lee/oxlint-plugin` | `sonsu-lee` | Scaffold, no rules yet |
 | `@sonsu-lee/eslint-plugin` | `sonsu-lee-eslint` | Planned for the first rule that needs type information |
 | `@sonsu-lee/eslint-config` | — | Planned with `eslint-plugin` |
@@ -54,8 +54,9 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 | --- | --- |
 | `src/index.ts` | Public API. Exports only `preset` and the `Options` type |
 | `src/preset.ts` | Builds the root config: root-only fields, then the selected configs, then the user's config |
-| `src/configs/*.ts` | One file per profile. Only fields that `extends` inherits |
+| `src/configs/*.ts` | One file per profile with inherited fields; `browser` has none and only sets `env.browser` |
 | `src/ignores.ts` | Default ignore patterns |
+| `src/profiles.test.ts` | Lints generated files with each option to check which plugins, files, and environments a profile covers |
 
 ### `packages/oxlint-plugin`
 
@@ -71,21 +72,26 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 - **`preset()` returns a root config.** It is never meant to be placed inside another config's `extends`.
 - **Fields go where Oxlint inherits them.** `src/configs/` holds only `rules`, `plugins`, `jsPlugins`, `overrides`, and `categories`. `src/preset.ts` sets `ignorePatterns`, `env`, `globals`, `settings`, and `options`, because `extends` does not inherit them.
 - **Profile configs are not exported.** Exporting them would invite use through `extends`, which loses the root-only fields.
-- **Profiles own their plugins.** Root-level `plugins` replaces Oxlint's default plugin set, while `plugins` inside `extends` can only add to it. When the first profile option is added, `preset()` sets `plugins: []` at the root and each profile config adds the plugins it needs.
+- **Profiles own their plugins.** Root-level `plugins` replaces Oxlint's default plugin set, while `plugins` inside `extends` can only add to it. `preset()` sets the root `plugins` to `[]` (or the user's list) to remove the defaults, and each config in `src/configs/` adds the plugins it needs. Every config sets `plugins`, even to `[]`, because Oxlint adds its default plugins for a config that omits it.
+- **Profile order is fixed**: base, typescript, typeAware, node, react, vitest, nestjs, then the user's `extends`. Later configs win, so a framework profile can change the rules of the language and runtime profiles before it.
+- **Rules come from Oxlint categories.** base turns on `correctness`, `suspicious`, `perf`, and `pedantic`; profiles add plugins, and set a rule only to turn off or relax a duplicate or a rule that reports standard code of the stack, or to choose the options of a rule the categories turn on, with the reason next to it. See [ADR 0005](docs/decisions/0005-profile-rule-sources.md).
+- **Type-aware linting is the default.** `typescript` and `typeAware` are on unless `typescript: false`, so profiles may assume type information.
 - **The custom plugin is registered with an alias**: `{ name: "sonsu-lee", specifier: "@sonsu-lee/oxlint-plugin" }`. Relative specifiers are rejected inside `extends`, and an unaliased scoped package gets the namespace `@sonsu-lee`.
 - **External JS plugins live only in the profiles that need them.** JS plugins cost load time, so `base` does not include them.
 - **Lint does not do the formatter's job.** Rules that overlap with oxfmt, such as `sort-imports`, stay off.
 
 ## Merging `userConfig`
 
-| Field | Behavior |
-| --- | --- |
-| `options.ignores` | Appended after the default ignore patterns |
-| `ignorePatterns` | Appended after `options.ignores` |
-| `extends` | Placed after the preset's configs, so it takes precedence |
-| `rules` | Kept at the root, where it overrides inherited rules |
-| `env`, `globals`, `settings` | Merged by key, user values win (when the preset starts setting them) |
-| `options` | User values win |
+| Field                 | Behavior                                                             |
+| --------------------- | -------------------------------------------------------------------- |
+| `options.ignores`     | Appended after the default ignore patterns                           |
+| `ignorePatterns`      | Appended after `options.ignores`                                     |
+| `extends`             | Placed after the preset's configs, so it takes precedence            |
+| `rules`               | Kept at the root, where it overrides inherited rules                 |
+| `plugins`             | Kept at the root; Oxlint adds the plugins of the selected profiles   |
+| `env`                 | Merged by key over the profiles' environments; user values win       |
+| `globals`, `settings` | Merged by key, user values win (when the preset starts setting them) |
+| `options`             | User values win                                                      |
 
 These rules are covered by `packages/oxlint-config/src/preset.test.ts`.
 

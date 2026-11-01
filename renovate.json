@@ -37,6 +37,11 @@
       "description": "Stay on the Node.js 24 LTS line; moving to a newer LTS is a deliberate change made by hand.",
       "matchDatasources": ["node-version"],
       "allowedVersions": "<25"
+    },
+    {
+      "description": "@types/node follows the Node.js 24 line in .node-version.",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<25"
     }
   ]
 }

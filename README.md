@@ -15,7 +15,7 @@ This repository publishes the Oxlint preset and custom rules I use across my Jav
 ## Getting started
 
 ```sh
-pnpm add -D oxlint @sonsu-lee/oxlint-config
+pnpm add -D oxlint oxlint-tsgolint @sonsu-lee/oxlint-config
 ```
 
 ```ts
@@ -23,10 +23,10 @@ pnpm add -D oxlint @sonsu-lee/oxlint-config
 import { preset } from '@sonsu-lee/oxlint-config';
 import { defineConfig } from 'oxlint';
 
-export default defineConfig(preset({ typeAware: true }, { rules: { 'no-console': 'off' } }));
+export default defineConfig(preset({ node: true }, { rules: { 'no-console': 'off' } }));
 ```
 
-Add `oxlint-tsgolint` when you enable `typeAware`.
+TypeScript with type-aware rules is on by default, which needs `oxlint-tsgolint`. Pass `typescript: false` for a JavaScript project.
 
 | Package | Description |
 | --- | --- |

@@ -15,7 +15,7 @@
 ## はじめに
 
 ```sh
-pnpm add -D oxlint @sonsu-lee/oxlint-config
+pnpm add -D oxlint oxlint-tsgolint @sonsu-lee/oxlint-config
 ```
 
 ```ts
@@ -23,10 +23,10 @@ pnpm add -D oxlint @sonsu-lee/oxlint-config
 import { preset } from '@sonsu-lee/oxlint-config';
 import { defineConfig } from 'oxlint';
 
-export default defineConfig(preset({ typeAware: true }, { rules: { 'no-console': 'off' } }));
+export default defineConfig(preset({ node: true }, { rules: { 'no-console': 'off' } }));
 ```
 
-`typeAware` を有効にする場合は `oxlint-tsgolint` もインストールしてください。
+TypeScript と型情報を使うルールが標準で有効になり、これらのルールには `oxlint-tsgolint` が必要です。JavaScript のプロジェクトでは `typescript: false` を渡してください。
 
 | パッケージ | 説明 |
 | --- | --- |

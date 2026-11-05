@@ -20,7 +20,7 @@ import { defineConfig } from 'oxlint';
 
 export default defineConfig({
   jsPlugins: [{ name: 'sonsu-lee', specifier: '@sonsu-lee/oxlint-plugin' }],
-  rules: {},
+  rules: { 'sonsu-lee/no-double-assertion': 'error' },
 });
 ```
 
@@ -28,7 +28,9 @@ Register the plugin with `name: "sonsu-lee"`. Without an alias, Oxlint derives t
 
 ## Rules
 
-None yet.
+| Rule | Description |
+| --- | --- |
+| [no-double-assertion](docs/rules/no-double-assertion.md) | Disallow chaining type assertions, such as `value as unknown as Foo` |
 
 ## Contributing
 

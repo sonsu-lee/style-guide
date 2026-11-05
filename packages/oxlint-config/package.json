@@ -24,6 +24,9 @@
     "typecheck": "tsc",
     "lint": "oxlint"
   },
+  "dependencies": {
+    "@sonsu-lee/oxlint-plugin": "workspace:^"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
     "oxlint": "catalog:",

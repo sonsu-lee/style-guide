@@ -34,11 +34,12 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # oxlint-config's lint and profile tests run Oxlint with the built @sonsu-lee/oxlint-plugin.
+      - name: Build
+        run: pnpm build
+
       - name: Lint
         run: pnpm lint
 
       - name: Test
         run: pnpm test
-
-      - name: Build
-        run: pnpm build

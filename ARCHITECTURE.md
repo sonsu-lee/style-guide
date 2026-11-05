@@ -17,7 +17,7 @@ Packages are split by the linter that runs them, not by rule topic.
 | Package | Rule namespace | Status |
 | --- | --- | --- |
 | `@sonsu-lee/oxlint-config` | — | Unpublished |
-| `@sonsu-lee/oxlint-plugin` | `sonsu-lee` | Scaffold, no rules yet |
+| `@sonsu-lee/oxlint-plugin` | `sonsu-lee` | One rule: `no-double-assertion` |
 | `@sonsu-lee/eslint-plugin` | `sonsu-lee-eslint` | Planned for the first rule that needs type information |
 | `@sonsu-lee/eslint-config` | — | Planned with `eslint-plugin` |
 | `@sonsu-lee/oxfmt-config` | — | Planned when formatter settings need to be shared |
@@ -76,8 +76,9 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 - **Profile order is fixed**: base, typescript, typeAware, node, react, vitest, nestjs, then the user's `extends`. Later configs win, so a framework profile can change the rules of the language and runtime profiles before it.
 - **Rules come from Oxlint categories.** base turns on `correctness`, `suspicious`, `perf`, and `pedantic`; profiles add plugins, and set a rule only to turn off or relax a duplicate or a rule that reports standard code of the stack, or to choose the options of a rule the categories turn on, with the reason next to it. See [ADR 0005](docs/decisions/0005-profile-rule-sources.md).
 - **Type-aware linting is the default.** `typescript` and `typeAware` are on unless `typescript: false`, so profiles may assume type information.
-- **The custom plugin is registered with an alias**: `{ name: "sonsu-lee", specifier: "@sonsu-lee/oxlint-plugin" }`. Relative specifiers are rejected inside `extends`, and an unaliased scoped package gets the namespace `@sonsu-lee`.
-- **External JS plugins live only in the profiles that need them.** JS plugins cost load time, so `base` does not include them.
+- **The custom plugin is registered with an alias and a resolved URL**: `{ name: 'sonsu-lee', specifier: import.meta.resolve('@sonsu-lee/oxlint-plugin') }`. Oxlint resolves a package name from the directory of the user's root config, so a project that installs only the preset finds the plugin only through the `NODE_PATH` that pnpm's bin shim sets. Relative specifiers are rejected inside `extends`. An unaliased scoped package gets the namespace `@sonsu-lee`.
+- **External JS plugins live only in the profiles that need them.** JS plugins cost load time, so `base` does not include them. `base` registers only `@sonsu-lee/oxlint-plugin`.
+- **`sonsu-lee/no-double-assertion` overlaps `typescript/no-unsafe-type-assertion` on purpose.** Outside test files both report a double assertion. The custom rule stays on everywhere because it still checks two places the type-aware rule does not: test files, where the vitest profile turns that rule off, and lines where a disable comment turns it off. Allowing a narrowing assertion does not also allow throwing the type away through `unknown`.
 - **Lint does not do the formatter's job.** Rules that overlap with oxfmt, such as `sort-imports`, stay off.
 
 ## Merging `userConfig`

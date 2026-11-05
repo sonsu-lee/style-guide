@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "typecheck": "tsc",
     "lint": "oxlint"
   },

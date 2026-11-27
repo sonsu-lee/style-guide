@@ -6,6 +6,7 @@ export default defineConfig({
   rules: {
     'sonsu-lee/no-double-assertion': 'error',
     'sonsu-lee/prefer-named-conditions': 'warn',
+    'sonsu-lee/require-effect-reason': 'error',
   },
   ignorePatterns: ['dist'],
 });

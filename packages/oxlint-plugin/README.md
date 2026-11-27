@@ -33,6 +33,7 @@ With Yarn PnP, Oxlint cannot resolve a plugin by package name. Pass the resolved
 | Rule | Description |
 | --- | --- |
 | [no-double-assertion](docs/rules/no-double-assertion.md) | Disallow chaining type assertions, such as `value as unknown as Foo` |
+| [prefer-named-conditions](docs/rules/prefer-named-conditions.md) | Review mixed operators, inline callbacks, and groups of unnamed predicates |
 
 ## Contributing
 

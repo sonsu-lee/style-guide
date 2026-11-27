@@ -51,6 +51,46 @@ setup({}).createMachine({
 });
       `,
     },
+    {
+      name: 'ignores invoke-shaped data in context, metadata, and actor input',
+      code: `
+import { setup } from 'xstate';
+
+setup({}).createMachine({
+  context: {
+    states: { reserved: { invoke: { src: 'auditStock', onDone: 'archived' } } },
+  },
+  states: {
+    reserving: {
+      meta: { invoke: { src: 'showProgress', onDone: 'hideProgress' } },
+      invoke: {
+        src: 'reserveStock',
+        input: { invoke: { src: 'auditStock', onDone: 'archived' } },
+        onDone: 'reserved',
+        onError: 'failed',
+      },
+    },
+  },
+});
+      `,
+    },
+    {
+      name: 'ignores a different machine builder and a shadowed XState setup',
+      code: `
+import { setup as configure } from 'xstate';
+import { workflow } from './workflows';
+
+workflow.createMachine({
+  invoke: { src: 'reserveStock', onDone: 'reserved' },
+});
+
+function checkout(configure) {
+  return configure().createMachine({
+    invoke: { src: 'reserveStock', onDone: 'reserved' },
+  });
+}
+      `,
+    },
   ],
   invalid: [
     {
@@ -74,6 +114,24 @@ buildMachine({
     { src: 'subscribeToOrders', onError: 'failed' },
     { 'src': 'reserveStock', 'onDone': 'reserved' },
   ],
+});
+      `,
+      errors: [{ messageId: 'missingOnError' }],
+    },
+    {
+      name: 'checks a deeply nested state of a machine from a named setup object',
+      code: `
+import * as XState from 'xstate';
+
+const checkoutSetup = XState.setup({});
+checkoutSetup.createMachine({
+  states: {
+    checkout: {
+      'states': {
+        reserving: { 'invoke': { src: 'reserveStock', onDone: 'reserved' } },
+      },
+    },
+  },
 });
       `,
       errors: [{ messageId: 'missingOnError' }],

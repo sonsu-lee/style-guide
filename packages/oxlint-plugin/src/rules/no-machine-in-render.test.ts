@@ -54,6 +54,16 @@ function CheckoutPanel({ createActor }) {
 }
       `,
     },
+    {
+      name: 'allows unrelated factories and XState helpers that do not create machines or actors',
+      code: `
+import { createActor, assign as updateCart } from 'xstate';
+
+function CheckoutPanel({ workflow }) {
+  return workflow.createActor(updateCart({}), createOrder());
+}
+      `,
+    },
   ],
   invalid: [
     {
@@ -97,6 +107,15 @@ import { createActor as makeActor } from 'xstate';
 const CheckoutPanel = function () {
   return makeActor(checkoutMachine).getSnapshot().value;
 };
+      `,
+      errors: [{ messageId: 'machineInRender' }],
+    },
+    {
+      name: 'resolves a factory member of the default import',
+      code: `
+import XState from 'xstate';
+
+const useCheckout = () => XState.createMachine({});
       `,
       errors: [{ messageId: 'machineInRender' }],
     },

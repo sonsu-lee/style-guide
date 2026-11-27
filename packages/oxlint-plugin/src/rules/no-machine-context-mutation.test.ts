@@ -62,6 +62,39 @@ assign(({ context }) => {
 });
       `,
     },
+    {
+      name: 'ignores a helper parameter that shadows the context in an action',
+      code: `
+import { setup } from 'xstate';
+
+setup({
+  actions: {
+    updateCart: ({ context }) => {
+      function normalize({ context }) {
+        context.items.sort();
+        return context.items;
+      }
+      saveCart(normalize({ context: { items: [...context.items] } }));
+    },
+  },
+});
+      `,
+    },
+    {
+      name: 'ignores context parameters owned by a non-XState factory callback',
+      code: `
+import { setup } from 'xstate';
+
+setup({
+  actions: {
+    updateCart: makeAction(({ context }) => {
+      context.items.sort();
+      return context.items;
+    }),
+  },
+});
+      `,
+    },
   ],
   invalid: [
     {
@@ -122,6 +155,24 @@ import { assign } from 'xstate';
 assign(({ context }) => {
   context.reservations.pending.set('order-42', true);
   return context;
+});
+      `,
+      errors: [{ messageId: 'contextMutation' }],
+    },
+    {
+      name: 'detects mutation of the outer action context captured by a helper',
+      code: `
+import { setup } from 'xstate';
+
+setup({
+  actions: {
+    updateCart: ({ context }) => {
+      function normalize() {
+        context.items.sort();
+      }
+      normalize();
+    },
+  },
 });
       `,
       errors: [{ messageId: 'contextMutation' }],

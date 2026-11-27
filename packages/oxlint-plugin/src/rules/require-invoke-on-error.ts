@@ -1,6 +1,35 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import type { ESTree, Rule, Scope } from '@oxlint/plugins';
 
 import { importedName } from '../utils/imported-name.ts';
+
+type Property = Extract<ESTree.Node, { type: 'Property' }>;
+
+function propertyName(property: Property): string | null {
+  if (property.computed) return null;
+  if (property.key.type === 'Identifier') return property.key.name;
+  if (property.key.type === 'Literal' && typeof property.key.value === 'string') {
+    return property.key.value;
+  }
+  return null;
+}
+
+function machineCall(invoke: Property): ESTree.CallExpression | null {
+  let config: ESTree.Node | null = invoke.parent;
+  while (config?.type === 'ObjectExpression') {
+    const parent: ESTree.Node | null = config.parent;
+    if (parent?.type === 'CallExpression' && parent.arguments[0] === config) return parent;
+
+    // Each nested state must be the value of a property in its parent's `states` map.
+    if (parent?.type !== 'Property' || parent.value !== config) return null;
+    const stateMap: ESTree.Node | null = parent.parent;
+    if (stateMap?.type !== 'ObjectExpression') return null;
+    const states: ESTree.Node | null = stateMap.parent;
+    if (states?.type !== 'Property') return null;
+    if (states.value !== stateMap || propertyName(states) !== 'states') return null;
+    config = states.parent;
+  }
+  return null;
+}
 
 export const requireInvokeOnError: Rule = {
   meta: {
@@ -18,67 +47,68 @@ export const requireInvokeOnError: Rule = {
   createOnce(context) {
     let importsXState = false;
 
-    function check(node: ESTree.Node): void {
+    function isMachineFactory(callee: ESTree.CallExpression['callee']): boolean {
+      if (importedName(context, callee, 'xstate') === 'createMachine') return true;
+      if (callee.type !== 'MemberExpression' || callee.computed) return false;
+      if (callee.property.type !== 'Identifier' || callee.property.name !== 'createMachine')
+        return false;
+
+      let receiver: ESTree.Node | null | undefined = callee.object;
+      if (receiver.type === 'Identifier') {
+        const { name } = receiver;
+        let scope: Scope | null = context.sourceCode.getScope(receiver);
+        while (scope && !scope.set.has(name)) scope = scope.upper;
+        const definition = scope?.set.get(name)?.defs[0];
+        if (definition?.type !== 'Variable' || definition.node.type !== 'VariableDeclarator')
+          return false;
+        if (definition.node.id.type !== 'Identifier') return false;
+        if (definition.parent?.type !== 'VariableDeclaration' || definition.parent.kind !== 'const')
+          return false;
+        receiver = definition.node.init;
+      }
+      return (
+        receiver?.type === 'CallExpression' &&
+        importedName(context, receiver.callee, 'xstate') === 'setup'
+      );
+    }
+
+    function check(node: ESTree.Node, invoke: Property): void {
       if (node.type !== 'ObjectExpression') return;
 
       // 1. Check the invoke entry before looking for its containing machine.
       let hasSrc = false;
       let hasOnDone = false;
       for (const property of node.properties) {
-        if (property.type !== 'Property' || property.computed) continue;
-        let name: unknown;
-        if (property.key.type === 'Identifier') name = property.key.name;
-        else if (property.key.type === 'Literal') name = property.key.value;
+        if (property.type !== 'Property') continue;
+        const name = propertyName(property);
         if (name === 'onError') return;
         if (name === 'onDone') hasOnDone = true;
         if (name === 'src') hasSrc = true;
       }
       if (!hasSrc || !hasOnDone) return;
 
-      // 2. Match inline config entries, not objects in a machine's callbacks.
-      let current = node.parent;
-      while (
-        current.type === 'Property' ||
-        current.type === 'ObjectExpression' ||
-        current.type === 'ArrayExpression'
-      ) {
-        current = current.parent;
-      }
-      if (current.type !== 'CallExpression') return;
-      const { callee } = current;
-      if (
-        (callee.type === 'MemberExpression' &&
-          !callee.computed &&
-          callee.property.type === 'Identifier' &&
-          callee.property.name === 'createMachine') ||
-        importedName(context, callee, 'xstate') === 'createMachine'
-      ) {
+      // 2. Prove that this entry belongs to the root config or a nested state.
+      const call = machineCall(invoke);
+      if (call && isMachineFactory(call.callee))
         context.report({ node, messageId: 'missingOnError' });
-      }
     }
 
     return {
       Program(node) {
         importsXState = node.body.some(
           (statement) =>
-            statement.type === 'ImportDeclaration' &&
-            (statement.source.value === 'xstate' || statement.source.value === '@xstate/react'),
+            statement.type === 'ImportDeclaration' && statement.source.value === 'xstate',
         );
       },
       Property(node) {
-        if (!importsXState || node.computed) return;
-        const { key, value } = node;
-        if (
-          !(key.type === 'Identifier' && key.name === 'invoke') &&
-          !(key.type === 'Literal' && key.value === 'invoke')
-        )
-          return;
+        if (!importsXState || propertyName(node) !== 'invoke') return;
+        const { value } = node;
         if (value.type !== 'ArrayExpression') {
-          check(value);
+          check(value, node);
           return;
         }
         for (const element of value.elements) {
-          if (element) check(element);
+          if (element) check(element, node);
         }
       },
     };

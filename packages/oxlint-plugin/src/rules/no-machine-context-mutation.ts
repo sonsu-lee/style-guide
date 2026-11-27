@@ -47,23 +47,32 @@ export const noMachineContextMutation: Rule = {
       const definition = scope?.set.get(root.name)?.defs[0];
       if (definition?.type !== 'Parameter') return;
 
-      // 3. The callback itself must be inside an XState configuration or helper call.
+      // 3. Find the callback's owner without crossing another function or helper call.
       let current = definition.node.parent;
-      while (current && current.type !== 'Program') {
-        if (current.type === 'CallExpression') {
-          const { callee } = current;
-          if (
-            (callee.type === 'MemberExpression' &&
-              !callee.computed &&
-              callee.property.type === 'Identifier' &&
-              (callee.property.name === 'createMachine' || callee.property.name === 'provide')) ||
-            importedName(context, callee, 'xstate') !== null
-          ) {
-            context.report({ node, messageId: 'contextMutation' });
+      while (current?.type !== 'CallExpression') {
+        switch (current?.type) {
+          case 'Property':
+          case 'ObjectExpression':
+          case 'ArrayExpression':
+          case 'TSAsExpression':
+          case 'TSSatisfiesExpression':
+          case 'TSNonNullExpression':
+          case 'TSTypeAssertion':
+            current = current.parent;
+            break;
+          default:
             return;
-          }
         }
-        current = current.parent;
+      }
+      const { callee } = current;
+      if (
+        (callee.type === 'MemberExpression' &&
+          !callee.computed &&
+          callee.property.type === 'Identifier' &&
+          (callee.property.name === 'createMachine' || callee.property.name === 'provide')) ||
+        importedName(context, callee, 'xstate') !== null
+      ) {
+        context.report({ node, messageId: 'contextMutation' });
       }
     }
 

@@ -4,7 +4,7 @@ Give an invoked actor a failure transition when its invoke handles success.
 
 ## Rule details
 
-An actor failure without an `onError` transition propagates out of the invocation. A checkout can then stop in its loading state instead of moving to a state that can show the failure or retry. The rule reports an inline invoke entry with `src` and `onDone` but no `onError`.
+An actor failure without an `onError` transition propagates out of the invocation. A checkout can then stop in its loading state instead of moving to a state that can show the failure or retry. The rule reports an inline invoke entry with `src` and `onDone` but no `onError` in the machine config or one of its nested states.
 
 Examples of code that this rule reports:
 
@@ -28,4 +28,4 @@ setup({}).createMachine({
 
 ## What the rule cannot see
 
-The rule does not resolve configuration objects passed by variable, spreads, computed properties, or re-exported named factories. It recognizes `.createMachine` by member name in files that import XState.
+The rule recognizes direct XState `createMachine` imports and `.createMachine()` on an XState `setup()` result, including one assigned directly to a `const`. It does not resolve configuration objects passed by variable, spreads, computed properties, or re-exported factories.

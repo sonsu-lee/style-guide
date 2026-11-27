@@ -38,6 +38,7 @@ The rule has no options or autofix. The caller decides whether to propagate the 
 ## What the rule cannot see
 
 - It checks dot calls to `.catch(handler)` and `.then(onFulfilled, handler)` on types with a callable `then` method that accepts a callback. It does not inspect `try`/`catch`, computed property calls, or receivers typed as `any` or `unknown`.
+- It skips `.then(...args, handler)` because the spread can change which argument handles rejection.
 - It does not follow references such as `.catch(showSaveError)` or check whether a handler does enough to report a failure. A handler that only logs an error can still leave the caller unaware.
 - It treats `void` as an `undefined` result without inspecting the expression for side effects.
 - For a constant fallback returned from an arrow expression, the rule does not follow the chain to see whether that arrow's caller reads the result.

@@ -45,6 +45,10 @@ tester.run('no-ignored-rejection', noIgnoredRejection, {
     withOrderService('const unchecked = JSON.parse("{}"); unchecked.catch(() => {});'),
     withOrderService('saveOrder(id).finally(() => {});'),
     withOrderService('saveOrder(id).then(() => {});'),
+    withOrderService(`
+      const fulfillmentArgs: [] = [];
+      saveOrder(id).then(...fulfillmentArgs, () => {});
+    `),
     withOrderService('saveOrder(id)["catch"](() => {});'),
   ],
   invalid: [

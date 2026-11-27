@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@sonsu-lee/eslint-plugin": "workspace:^",
+    "@types/eslint": "9.6.1",
     "@typescript-eslint/parser": "8.74.0"
   },
   "devDependencies": {

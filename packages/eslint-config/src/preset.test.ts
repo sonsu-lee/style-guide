@@ -12,6 +12,7 @@ describe('preset', () => {
     const typescript: unknown = await eslint.calculateConfigForFile('src/order.ts');
     const javascript: unknown = await eslint.calculateConfigForFile('src/order.js');
     expect(typescript).toMatchObject({ rules: { [rule]: [2] } });
+    expect(typescript).toMatchObject({ linterOptions: { reportUnusedDisableDirectives: 0 } });
     expect(javascript).not.toHaveProperty(['rules', rule]);
   });
 

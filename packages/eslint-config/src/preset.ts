@@ -9,7 +9,8 @@ export function preset(...userConfigs: Linter.Config[]): Linter.Config[] {
       name: 'sonsu-lee/typed',
       files: ['**/*.{ts,tsx,mts,cts}'],
       languageOptions: { parser, parserOptions: { projectService: true } },
-      // ESLint sees `eslint-disable` comments for Oxlint rules as unused.
+      // Leave unused-directive reporting off in the two-linter setup. Use `oxlint-disable` for
+      // Oxlint-only rules: ESLint still reports an unknown rule ID in an `eslint-disable`.
       linterOptions: { reportUnusedDisableDirectives: 'off' },
       plugins: { 'sonsu-lee-eslint': plugin },
       rules: { 'sonsu-lee-eslint/no-ignored-rejection': 'error' },

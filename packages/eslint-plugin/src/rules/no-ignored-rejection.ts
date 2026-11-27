@@ -16,7 +16,8 @@ function rejectionHandler(
 ): Handler | null {
   let argument;
   if (name === 'catch') argument = args[0];
-  else if (name === 'then') argument = args[1];
+  // A spread in the fulfillment slot can move the next argument out of the rejection slot.
+  else if (name === 'then' && args[0]?.type !== AST_NODE_TYPES.SpreadElement) argument = args[1];
   else return null;
   if (
     argument?.type === AST_NODE_TYPES.ArrowFunctionExpression ||

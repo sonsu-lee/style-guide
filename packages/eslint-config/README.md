@@ -21,3 +21,5 @@ export default preset();
 ```
 
 Run `oxlint && eslint` so ESLint runs after Oxlint. The preset enables the typed ESLint rules only for `.ts`, `.tsx`, `.mts`, and `.cts` files and ignores `dist` and `coverage` directories. Pass project-specific ESLint config objects to `preset()` to apply them last.
+
+Use `// oxlint-disable-next-line <rule> -- <reason>` for rules that run only in Oxlint. ESLint reports an unknown rule ID if you name an Oxlint-only rule in an `eslint-disable` comment, even though the preset turns off unused-disable reporting.

@@ -10,10 +10,12 @@ export const nestjs: OxlintConfig = {
   },
   overrides: [
     {
-      // The CommonJS template ends main.ts with `void bootstrap()`, where top-level await is not
-      // available.
+      // The CommonJS template cannot use top-level await, so main.ts ends with `void bootstrap()`.
       files: ['**/main.ts'],
-      rules: { 'unicorn/prefer-top-level-await': 'off' },
+      rules: {
+        'unicorn/prefer-top-level-await': 'off',
+        'typescript/no-floating-promises': ['error', { ignoreVoid: true }],
+      },
     },
   ],
 };

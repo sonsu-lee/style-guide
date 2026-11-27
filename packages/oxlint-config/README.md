@@ -62,6 +62,30 @@ Passing `typescript: false` with `typeAware: true` or `nestjs: true`, or `node: 
 
 A config in `extends` that omits `plugins` turns Oxlint's default plugins (`unicorn`, `typescript`, `oxc`) back on, so set `plugins: []` or list the plugins it needs.
 
+## What the preset reports
+
+### Promises nobody waits for
+
+**Failure it prevents.** The warehouse rejects a transfer after the order has already been marked as synced.
+
+**Reported**
+
+```ts
+void pushToWarehouse(order);
+markSynced(order);
+```
+
+**Allowed**
+
+```ts
+await pushToWarehouse(order);
+markSynced(order);
+```
+
+**Profile and severity.** The type-aware profile reports an error. Return the promise, await it, or attach a rejection handler. The NestJS profile allows `void bootstrap()` in `main.ts`.
+
+**What it cannot see.** JavaScript-only presets without type-aware linting and calls on `any` do not provide the promise type this check needs.
+
 ## Contributing
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

@@ -20,15 +20,19 @@ import { defineConfig } from 'oxlint';
 
 export default defineConfig({
   jsPlugins: [{ name: 'sonsu-lee', specifier: '@sonsu-lee/oxlint-plugin' }],
-  rules: {},
+  rules: { 'sonsu-lee/no-double-assertion': 'error' },
 });
 ```
 
 Register the plugin with `name: "sonsu-lee"`. Without an alias, Oxlint derives the namespace `@sonsu-lee` from the scoped package name.
 
+With Yarn PnP, Oxlint cannot resolve a plugin by package name. Pass the resolved URL instead: `specifier: import.meta.resolve('@sonsu-lee/oxlint-plugin')`.
+
 ## Rules
 
-None yet.
+| Rule | Description |
+| --- | --- |
+| [no-double-assertion](docs/rules/no-double-assertion.md) | Disallow chaining type assertions, such as `value as unknown as Foo` |
 
 ## Contributing
 

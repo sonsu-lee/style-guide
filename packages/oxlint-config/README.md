@@ -24,6 +24,12 @@ export default defineConfig(
 
 Use `preset()` as the root config. Do not put it inside another config's `extends`: Oxlint does not inherit `ignorePatterns`, `env`, `globals`, or `settings` through `extends`, so those settings would be lost.
 
+The preset includes the rules of [`@sonsu-lee/oxlint-plugin`](../oxlint-plugin) under the `sonsu-lee` namespace. The plugin is installed with the preset, so you do not need to install it separately. To turn a rule off:
+
+```ts
+preset({}, { rules: { 'sonsu-lee/no-double-assertion': 'off' } });
+```
+
 ## API
 
 ### `preset(options?, userConfig?)`

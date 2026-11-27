@@ -13,4 +13,17 @@ export const base: OxlintConfig = {
     perf: 'error',
     pedantic: 'error',
   },
+  jsPlugins: [
+    {
+      // Without an alias, Oxlint derives the namespace `@sonsu-lee` from the scoped package name.
+      name: 'sonsu-lee',
+      // Oxlint resolves a package name from the project's root config, where a project that
+      // installs only this preset may not see the plugin. A file:// URL resolved from this
+      // package always points at the plugin installed with it.
+      specifier: import.meta.resolve('@sonsu-lee/oxlint-plugin'),
+    },
+  ],
+  rules: {
+    'sonsu-lee/no-double-assertion': 'error',
+  },
 };

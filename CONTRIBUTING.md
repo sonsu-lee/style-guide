@@ -77,6 +77,7 @@ Follow the decision flow in [ARCHITECTURE.md](ARCHITECTURE.md#where-a-new-rule-g
    - Use the `Rule` and `ESTree` types from `@oxlint/plugins`.
 3. `packages/oxlint-plugin/src/rules/<rule-id>.test.ts`: turn the documented examples into `RuleTester` cases from `oxlint/plugins-dev`.
 4. Register the rule in `src/index.ts` and in the package's `oxlint.config.ts`, and enable it in `packages/oxlint-config/src/configs/base.ts`.
+5. Add a fixture under `packages/scenarios/apps/<app>/src/<policy>/` that shows the failure the rule prevents and code it must allow.
 
 Rule guidelines:
 
@@ -115,6 +116,7 @@ Add a term to this table before using a new one.
 | Rules | `RuleTester` valid and invalid cases |
 | `preset` merging | Each row of the merge table in ARCHITECTURE.md has a test |
 | Profiles | `src/profiles.test.ts` runs Oxlint on generated files for each option |
+| Preset behavior on realistic code | `packages/scenarios`: each app lints its fixtures and compares the result with the `// expect:` markers |
 | Published files | Publish the packages with `pnpm publish` to a local registry, such as Verdaccio, so `workspace:` and `catalog:` versions are rewritten as on npm. In scratch projects that install Oxlint and the preset but not the plugin, run Oxlint from the CLI and through `oxlint --lsp` with npm, pnpm, Yarn (PnP and `node-modules`), Bun, and Deno, on macOS and Windows, including a project path with a space and `#`. Run it once without pnpm's bin shim (`node node_modules/oxlint/bin/oxlint`): the `NODE_PATH` the shim sets can hide a plugin that does not resolve. Also install only the plugin and register it as its README shows |
 | Upstream constraints | Re-run the checks in [docs/reference/oxlint-constraints.md](docs/reference/oxlint-constraints.md) when upgrading Oxlint |
 

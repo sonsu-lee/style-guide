@@ -35,6 +35,15 @@ TypeScript と型情報を使うルールが標準で有効になり、これら
 
 パッケージの構成は [ARCHITECTURE.md](ARCHITECTURE.md)、設計判断の理由は [docs/decisions](docs/decisions) にあります（英語）。
 
+## 診断結果の読み方
+
+| 重要度 | 対応                                                                     |
+| ------ | ------------------------------------------------------------------------ |
+| エラー | マージする前に修正します。                                               |
+| 警告   | コードを確認し、書き換えても分かりやすくならない場合はそのままにします。 |
+
+警告だけなら、lint コマンドは正常終了します。判断基準は [ADR 0006](docs/decisions/0006-rule-severity-and-policy-rules.md) を参照してください。
+
 ## サポート
 
 [GitHub Issues](https://github.com/sonsu-lee/style-guide/issues) で issue を作成してください。

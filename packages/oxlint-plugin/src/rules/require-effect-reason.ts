@@ -1,6 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 
-import { importedName } from '../utils/imported-name.ts';
+import { importedName, importSpecifierName } from '../utils/imported-name.ts';
 
 function isEffectHook(name: string | null): boolean {
   return name === 'useEffect' || name === 'useLayoutEffect' || name === 'useInsertionEffect';
@@ -30,9 +30,8 @@ export const requireEffectReason: Rule = {
           if (statement.type !== 'ImportDeclaration' || statement.source.value !== 'react')
             continue;
           for (const specifier of statement.specifiers) {
-            if (specifier.type !== 'ImportSpecifier' || specifier.imported.type !== 'Identifier')
-              continue;
-            const { name } = specifier.imported;
+            if (specifier.type !== 'ImportSpecifier') continue;
+            const name = importSpecifierName(specifier);
             if (name !== specifier.local.name && isEffectHook(name)) {
               (effectAliases ??= new Set()).add(specifier.local.name);
             }

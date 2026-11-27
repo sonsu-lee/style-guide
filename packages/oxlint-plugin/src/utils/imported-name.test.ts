@@ -17,10 +17,19 @@ const probe: Rule = {
   },
 };
 new RuleTester().run('imported-name', probe, {
-  valid: ["import {useEffect} from 'other'; useEffect();", 'function useEffect() {} useEffect();'],
+  valid: [
+    "import {useEffect} from 'other'; useEffect();",
+    "import { 'useEffect' as useSync } from 'other'; useSync();",
+    `import { 'useEffect' as useSync } from 'react';
+function attachChat(useSync) {
+  useSync();
+}`,
+    'function useEffect() {} useEffect();',
+  ],
   invalid: [
     "import {useEffect} from 'react'; useEffect();",
     "import {useEffect as sync} from 'react'; sync();",
+    "import { 'useEffect' as useSync } from 'react'; useSync();",
     "import React from 'react'; React.useEffect();",
     "import * as React from 'react'; React.useEffect();",
   ].map((code) => ({ code, errors: [{ messageId: 'found' }] })),

@@ -33,6 +33,13 @@ function attachChat(useSync) {
   useSync(connectToChat);
 }`,
     },
+    {
+      name: 'allows a local parameter that shadows a string-literal React alias',
+      code: `import { 'useEffect' as useSync } from 'react';
+function attachChat(useSync) {
+  useSync(connectToChat);
+}`,
+    },
     `import { useSyncExternalStore } from 'react';
 function useOnlineStatus() {
   return useSyncExternalStore(subscribeToNetwork, getOnlineStatus);
@@ -54,6 +61,14 @@ function useChatRoom(roomId) {
 }
 import { useEffect as useSync } from 'react';`,
       errors: [{ messageId: 'missingReason' }],
+    },
+    {
+      name: 'reports a string-literal named import aliased to a different local name',
+      code: `import { 'useEffect' as useSync } from 'react';
+function useChatRoom(roomId) {
+  useSync(() => connectToChat(roomId), [roomId]);
+}`,
+      errors: [{ messageId: 'missingReason', line: 3 }],
     },
     {
       name: 'reports a layout Effect on a React default import',

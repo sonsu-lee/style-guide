@@ -1,5 +1,10 @@
 import type { Context, ESTree, Scope } from '@oxlint/plugins';
 
+export function importSpecifierName({ imported }: ESTree.ImportSpecifier): string {
+  if (imported.type === 'Identifier') return imported.name;
+  return imported.value;
+}
+
 /** Resolves direct named imports and noncomputed members of default or namespace imports. */
 export function importedName(
   context: Context,
@@ -32,8 +37,8 @@ export function importedName(
       )
         return null;
       if (def.node.type === 'ImportSpecifier') {
-        if (member !== null || def.node.imported.type !== 'Identifier') return null;
-        return def.node.imported.name;
+        if (member !== null) return null;
+        return importSpecifierName(def.node);
       }
       return member;
     }

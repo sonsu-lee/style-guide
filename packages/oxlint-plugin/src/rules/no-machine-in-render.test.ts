@@ -67,6 +67,11 @@ function CheckoutPanel({ workflow }) {
   ],
   invalid: [
     {
+      name: 'recognizes a quoted factory import during render',
+      code: "import { 'createActor' as makeActor } from 'xstate'; function Checkout() { return makeActor(machine); }",
+      errors: [{ messageId: 'machineInRender' }],
+    },
+    {
       name: 'creates a machine as an argument to useMachine',
       code: `
 import { createMachine } from 'xstate';

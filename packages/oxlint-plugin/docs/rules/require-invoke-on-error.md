@@ -29,3 +29,5 @@ setup({}).createMachine({
 ## What the rule cannot see
 
 The rule recognizes direct XState `createMachine` imports and `.createMachine()` on an XState `setup()` result, including one assigned directly to a `const`. It does not resolve configuration objects passed by variable, spreads, computed properties, or re-exported factories.
+
+It does not follow imported setup objects, `.extend()` chains, or setup values held in mutable variables or wrapped in type assertions.

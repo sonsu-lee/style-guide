@@ -1,6 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 
-import { importedName } from '../utils/imported-name.ts';
+import { importedName, importSpecifierName } from '../utils/imported-name.ts';
 
 function isFactory(name: string | null): boolean {
   return name === 'createMachine' || name === 'setup' || name === 'createActor';
@@ -32,10 +32,7 @@ export const noMachineInRender: Rule = {
           for (const specifier of statement.specifiers) {
             if (specifier.type !== 'ImportSpecifier') {
               namespaceNames.add(specifier.local.name);
-            } else if (
-              specifier.imported.type === 'Identifier' &&
-              isFactory(specifier.imported.name)
-            ) {
+            } else if (isFactory(importSpecifierName(specifier))) {
               factoryNames.add(specifier.local.name);
             }
           }

@@ -1,0 +1,15 @@
+@value accent: #246;
+
+:local(.button) {
+  composes: base from './base.module.css';
+  --button-accent: accent;
+}
+
+:global(.is-open) .button {
+  display: block;
+}
+
+/* expect: error selector-pseudo-class-no-unknown */
+:globl(.is-open) .button {
+  display: block;
+}

@@ -1,0 +1,43 @@
+{
+  "name": "@sonsu-lee/stylelint-config",
+  "version": "0.0.0",
+  "description": "Stylelint preset for CSS, CSS Modules, and Tailwind CSS v4",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonsu-lee/style-guide.git",
+    "directory": "packages/stylelint-config"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "stylelint-config-recommended": "19.1.0"
+  },
+  "devDependencies": {
+    "@sonsu-lee/oxlint-config": "workspace:^",
+    "@types/node": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "stylelint": "18.1.0",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "stylelint": "^18.0.0"
+  }
+}

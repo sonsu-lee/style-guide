@@ -32,6 +32,7 @@ TypeScript와 타입 정보가 필요한 규칙이 기본으로 켜지며, 이 �
 | --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint 프리셋을 만드는 factory 함수 |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Oxlint가 JS 플러그인으로 실행하는 커스텀 규칙 |
+| [`@sonsu-lee/stylelint-config`](packages/stylelint-config) | CSS, CSS Modules, Tailwind CSS v4용 Stylelint 설정 |
 
 패키지 구조는 [ARCHITECTURE.md](ARCHITECTURE.md)(영어)에, 설계를 이렇게 정한 이유는 [docs/decisions](docs/decisions)(영어)에 있습니다.
 

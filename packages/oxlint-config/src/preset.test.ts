@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { nextjs } from './configs/nextjs.ts';
+import { react } from './configs/react.ts';
 import { preset } from './preset.ts';
 
 describe('preset', () => {
@@ -48,6 +50,11 @@ describe('preset', () => {
     expect(preset({ typeAware: false }, { options: { typeAware: true } })).toEqual(
       preset({ typeAware: true }),
     );
+  });
+
+  it('loads React with Next.js', () => {
+    expect(preset({ nextjs: true }).extends).toEqual(expect.arrayContaining([react, nextjs]));
+    expect(() => preset({ nextjs: true, react: false })).toThrow(/react/u);
   });
 
   it('rejects turning off a profile that another option needs', () => {

@@ -44,6 +44,7 @@ Returns a complete Oxlint root config. Oxlint's `correctness`, `suspicious`, `pe
 | `node` | `false` | Node.js plugin and globals |
 | `browser` | `false` | Browser globals |
 | `react` | `false` | React and React Hooks plugin |
+| `nextjs` | `false` | Next.js core-web-vitals rules; enables React |
 | `vitest` | `false` | Vitest plugin for `*.test.*`, `*.spec.*`, and `*.e2e-spec.*` files |
 | `nestjs` | `false` | Allows code the NestJS CLI generates. Needs `typescript` and turns on `node` |
 
@@ -178,6 +179,23 @@ useEffect(() => connect(roomId), [roomId]);
 **Profile and severity.** React, error. The reason does not suppress dependency or state checks.
 
 **What it cannot see.** Re-exports, destructured namespace members, and whether a stated reason is true. For alternatives, see [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect).
+
+### Next.js
+
+**Failure it prevents.** A synchronous script delays rendering, and a plain image bypasses Next.js image optimization.
+
+**Reported:** `<script src="/checkout.js" />` and `<img src="/hero.png" alt="" />`.
+
+**Allowed:** `next/script` and `next/image`.
+
+**Profile and severity.** `nextjs` follows the supported rules in `@next/eslint-plugin-next`'s `core-web-vitals` config:
+
+| Examples                                                                  | Severity |
+| ------------------------------------------------------------------------- | -------- |
+| `no-img-element`, `no-head-element`, `no-async-client-component`          | Warning  |
+| `no-sync-scripts`, `no-html-link-for-pages`, `no-head-import-in-document` | Error    |
+
+**What it cannot see.** This is not the full `eslint-config-next`: it does not add jsx-a11y or import rules. It sets no global environment because server and client files share a project.
 
 ## Contributing
 

@@ -57,6 +57,12 @@ describe('preset', () => {
     expect(() => preset({ nextjs: true, react: false })).toThrow(/react/u);
   });
 
+  it('loads the Query plugin and React only when requested', () => {
+    expect(preset({ tanstackQuery: true }).extends).toContain(react);
+    expect(() => preset({ tanstackQuery: true, react: false })).toThrow(/react/u);
+    expect(JSON.stringify(preset().extends)).not.toContain('@tanstack/query');
+  });
+
   it('rejects turning off a profile that another option needs', () => {
     expect(() => preset({ typeAware: true, typescript: false })).toThrow(/typescript/u);
     expect(() => preset({ nestjs: true, typescript: false })).toThrow(/typescript/u);

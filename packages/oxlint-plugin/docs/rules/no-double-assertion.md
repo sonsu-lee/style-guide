@@ -18,8 +18,9 @@ Examples of code that this rule reports:
 value as unknown as Foo;
 <Foo>(<unknown>value);
 <Foo>(value as unknown);
-value as unknown as Foo;
 value as unknown as Foo as Bar; // reported once
+[1] as const as unknown as Foo; // `as const` is skipped, the other two count
+(a as unknown as A).b as unknown as B; // two chains, reported twice
 ```
 
 Examples of code that this rule allows:
@@ -36,7 +37,7 @@ value as Foo as const;
 The rule reads the syntax of one expression, so it does not report:
 
 - Assertions split across statements, such as `const raw = value as unknown; raw as Foo;`.
-- Chains broken by `!` or `satisfies`, such as `(value as unknown)! as Foo`.
+- Chains broken by `!` or `satisfies`, such as `(value as unknown)! as Foo` or `(value as unknown satisfies unknown) as Foo`.
 - A single assertion on a value that is already `any`, such as `JSON.parse(text) as Foo`.
 - A single assertion to `never` or `any`, such as `{} as never`, which also gets past TypeScript's check.
 

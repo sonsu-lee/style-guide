@@ -80,20 +80,25 @@ afterAll(() => {
 });
 
 // Writes the preset as the fixture project's config and returns what Oxlint prints.
-function runOxlint(options: Options, args: string[]): string {
+function runOxlint(options: Options, args: string[]): { stdout: string; stderr: string } {
   writeFileSync(
     join(projectDir, 'oxlint.config.ts'),
     `export default ${JSON.stringify(preset(options))};\n`,
   );
-  return spawnSync(process.execPath, [oxlintBin, ...args], { cwd: projectDir, encoding: 'utf8' })
-    .stdout;
+  return spawnSync(process.execPath, [oxlintBin, ...args], { cwd: projectDir, encoding: 'utf8' });
 }
 
 // Returns each diagnostic as "<file> <code>", sorted.
 function lint(options: Options): string[] {
-  const report = JSON.parse(runOxlint(options, ['--format', 'json', 'src'])) as {
-    diagnostics: { filename: string; code: string }[];
-  };
+  const { stdout, stderr } = runOxlint(options, ['--format', 'json', 'src']);
+  // Oxlint prints a plain-text error instead of a report when the config fails to load, for
+  // example when @sonsu-lee/oxlint-plugin has not been built.
+  if (!stdout.startsWith('{')) {
+    throw new Error(
+      `Oxlint printed no report. If @sonsu-lee/oxlint-plugin is not built, run \`pnpm build\`.\n${stdout}${stderr}`,
+    );
+  }
+  const report = JSON.parse(stdout) as { diagnostics: { filename: string; code: string }[] };
   return report.diagnostics.map(({ filename, code }) => `${filename} ${code}`).toSorted();
 }
 

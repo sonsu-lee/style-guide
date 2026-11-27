@@ -9,6 +9,7 @@ import { tanstackQuery } from './configs/tanstack-query.ts';
 import { typeAware } from './configs/type-aware.ts';
 import { typescript } from './configs/typescript.ts';
 import { vitest } from './configs/vitest.ts';
+import { xstate } from './configs/xstate.ts';
 import { defaultIgnores } from './ignores.ts';
 
 export interface Options {
@@ -31,6 +32,8 @@ export interface Options {
   nextjs?: boolean;
   /** TanStack Query rules for React; needs @tanstack/eslint-plugin-query. Turns on react. */
   tanstackQuery?: boolean;
+  /** XState v5 machine rules. */
+  xstate?: boolean;
   /** Vitest rules for test files. */
   vitest?: boolean;
   /** Adjusts the TypeScript rules for NestJS. Needs `typescript` and turns on `node`. */
@@ -51,6 +54,7 @@ function selectProfiles(options: Options): Required<Omit<Options, 'ignores'>> {
     react: options.react ?? needsReact,
     nextjs: options.nextjs ?? false,
     tanstackQuery: options.tanstackQuery ?? false,
+    xstate: options.xstate ?? false,
     vitest: options.vitest ?? false,
     nestjs: options.nestjs ?? false,
   };
@@ -86,6 +90,7 @@ export function preset(options: Options = {}, userConfig: OxlintConfig = {}): Ox
     [selected.react, () => react],
     [selected.nextjs, () => nextjs],
     [selected.tanstackQuery, tanstackQuery],
+    [selected.xstate, () => xstate],
     [selected.vitest, () => vitest],
     [selected.nestjs, () => nestjs],
   ];

@@ -66,6 +66,8 @@ const fixtures: Record<string, string> = {
   'src/page.jsx': 'export const hero = <img src="/hero.png" alt="" />;\n',
   'src/orders-query.jsx':
     "import { useQuery } from '@tanstack/react-query';\nexport function useOrder(orderId) { return useQuery({ queryKey: ['order'], queryFn: () => fetch(orderId) }); }\n",
+  'src/toggle-machine.js':
+    "import { createMachine } from 'xstate';\nexport const toggle = createMachine({});\n",
 };
 
 let projectDir: string;
@@ -185,6 +187,14 @@ const cases: { options: Options; expected: string[] }[] = [
       'src/component.tsx react-hooks(rules-of-hooks)',
       'src/orders-query.jsx @tanstack/query(exhaustive-deps)',
       'src/stub.test.ts sonsu-lee(no-double-assertion)',
+    ],
+  },
+  {
+    options: { typescript: false, xstate: true },
+    expected: [
+      'src/base.js unicorn(no-new-array)',
+      'src/stub.test.ts sonsu-lee(no-double-assertion)',
+      'src/toggle-machine.js sonsu-lee(prefer-machine-setup)',
     ],
   },
 ];

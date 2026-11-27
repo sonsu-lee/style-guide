@@ -34,5 +34,7 @@ export const base: OxlintConfig = {
     'no-unneeded-ternary': 'off',
     // Name boolean conversions with Boolean(value); numeric and string shorthand stay allowed.
     'no-implicit-coercion': ['error', { boolean: true, number: false, string: false }],
+    // A signal to review, not a defect: naming a check is not always clearer.
+    'sonsu-lee/prefer-named-conditions': 'warn',
   },
 };

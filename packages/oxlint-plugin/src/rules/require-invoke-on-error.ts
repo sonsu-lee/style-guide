@@ -93,12 +93,20 @@ export const requireInvokeOnError: Rule = {
         context.report({ node, messageId: 'missingOnError' });
     }
 
+    function hasXStateImport(node: ESTree.Program): boolean {
+      return node.body.some(
+        (statement) =>
+          statement.type === 'ImportDeclaration' && statement.source.value === 'xstate',
+      );
+    }
+
     return {
+      // Skip property dispatch altogether when the host supports the per-file hook.
+      before() {
+        return hasXStateImport(context.sourceCode.ast);
+      },
       Program(node) {
-        importsXState = node.body.some(
-          (statement) =>
-            statement.type === 'ImportDeclaration' && statement.source.value === 'xstate',
-        );
+        importsXState = hasXStateImport(node);
       },
       Property(node) {
         if (!importsXState || propertyName(node) !== 'invoke') return;

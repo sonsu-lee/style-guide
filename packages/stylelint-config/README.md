@@ -20,7 +20,7 @@ Run `pnpm exec stylelint '**/*.css'`.
 
 - The browser ignores `colr: red` and `padding: 10pixels`. Stylelint reports the unknown property and unit.
 - A later `margin: 0` resets an earlier `margin-top: 8px` in the same block. Stylelint reports the shorthand override.
-- A misspelled `@tailwnd` is reported, while Tailwind CSS v4 directives such as `@theme` and `@apply` are allowed. Functional utilities can use `--value()` in declarations because Stylelint's declaration-value rule skips `@utility` blocks; Tailwind handles those values.
+- A misspelled `@tailwnd` is reported, while Tailwind CSS v4 directives such as `@theme` and `@apply` are allowed. Stylelint skips declaration-value checks directly inside `@utility`, so `tab-size: --value(integer)` passes there. The same declaration under a nested selector such as `&:hover` is checked as ordinary CSS and is not supported by this preset.
 
 ## CSS Modules
 

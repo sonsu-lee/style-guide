@@ -21,6 +21,7 @@ Packages are split by the linter that runs them, not by rule topic.
 | `@sonsu-lee/eslint-plugin` | `sonsu-lee-eslint` | Planned for the first rule that needs type information |
 | `@sonsu-lee/eslint-config` | — | Planned with `eslint-plugin` |
 | `@sonsu-lee/oxfmt-config` | — | Planned when formatter settings need to be shared |
+| `@sonsu-lee/stylelint-config` | — | Unpublished |
 
 ```mermaid
 flowchart LR
@@ -78,7 +79,7 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 - **Type-aware linting is the default.** `typescript` and `typeAware` are on unless `typescript: false`, so profiles may assume type information.
 - **The custom plugin is registered with an alias**: `{ name: "sonsu-lee", specifier: "@sonsu-lee/oxlint-plugin" }`. Relative specifiers are rejected inside `extends`, and an unaliased scoped package gets the namespace `@sonsu-lee`.
 - **External JS plugins live only in the profiles that need them.** JS plugins cost load time, so `base` does not include them.
-- **Lint does not do the formatter's job.** Rules that overlap with oxfmt, such as `sort-imports`, stay off.
+- **Lint does not do the formatter's job.** Rules that overlap with oxfmt, such as `sort-imports`, stay off. For CSS, Stylelint checks for mistakes and oxfmt handles formatting.
 
 ## Merging `userConfig`
 

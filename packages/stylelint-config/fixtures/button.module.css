@@ -1,0 +1,22 @@
+@value accent: #246;
+@value button-gap from './tokens.css';
+
+:local(.button) {
+  composes: base from './base.module.css';
+  --button-accent: accent;
+  /* expect: error declaration-property-value-no-unknown */
+  color: accent;
+  /* expect: error declaration-property-value-no-unknown */
+  padding: 0 button-gap;
+  /* expect: error declaration-property-value-no-unknown */
+  background-color: rebeccapurpel;
+}
+
+:global(.is-open) .button {
+  display: block;
+}
+
+/* expect: error selector-pseudo-class-no-unknown */
+:globl(.is-open) .button {
+  display: block;
+}

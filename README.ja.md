@@ -32,6 +32,7 @@ TypeScript と型情報を使うルールが標準で有効になり、これら
 | --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint プリセットの factory |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Oxlint が JS プラグインとして実行する自作ルール |
+| [`@sonsu-lee/stylelint-config`](packages/stylelint-config) | CSS、CSS Modules、Tailwind CSS v4 向けの Stylelint 設定 |
 
 パッケージの構成は [ARCHITECTURE.md](ARCHITECTURE.md)、設計判断の理由は [docs/decisions](docs/decisions) にあります（英語）。
 

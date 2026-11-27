@@ -32,6 +32,7 @@ TypeScript with type-aware rules is on by default, which needs `oxlint-tsgolint`
 | --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint preset factory |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Custom lint rules, run by Oxlint as a JS plugin |
+| [`@sonsu-lee/stylelint-config`](packages/stylelint-config) | Stylelint config for CSS, CSS Modules, and Tailwind CSS v4 |
 
 How the packages fit together: [ARCHITECTURE.md](ARCHITECTURE.md). Why they are built this way: [docs/decisions](docs/decisions).
 

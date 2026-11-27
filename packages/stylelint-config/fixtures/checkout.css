@@ -1,0 +1,47 @@
+@layer components {
+  @container (width > 30rem) {
+    .checkout {
+      --accent: #246;
+      color: color-mix(in srgb, var(--accent), white);
+
+      & .summary {
+        display: grid;
+      }
+    }
+  }
+}
+
+.checkout-summary {
+  /* expect: error property-no-unknown */
+  colr: red;
+  margin-top: 8px;
+  /* expect: error declaration-block-no-shorthand-property-overrides */
+  margin: 0;
+  /* expect: error declaration-property-value-no-unknown */
+  color: #ggg;
+  /* expect: error declaration-property-value-no-unknown */
+  padding: 10pixels;
+  /* expect: error property-no-unknown */
+  composes: summary from './summary.module.css';
+}
+
+/* expect: error no-invalid-position-at-import-rule */
+@import './layout.css';
+
+/* expect: error no-duplicate-selectors */
+.checkout-summary {
+  border: 0;
+}
+
+/* expect: error block-no-empty */
+.checkout-placeholder {
+}
+
+@media (width >= 40rem) {
+  .checkout-summary {
+    display: grid;
+  }
+}
+
+/* expect: error at-rule-no-unknown */
+@value accent: #246;

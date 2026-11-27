@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+@reference './tokens.css';
+@config './tailwind.config.js';
+@plugin '@tailwindcss/typography';
+@source '../templates';
+
+@theme {
+  --color-checkout: #246;
+}
+
+@custom-variant checkout-ready (&:where(.ready *));
+
+@utility checkout-badge {
+  color: var(--color-checkout);
+}
+
+@utility tab-* {
+  tab-size: --value(--tab-size-*, integer, [integer]);
+}
+
+@utility opacity-* {
+  opacity: calc(--value(integer) * 1%);
+}
+
+@utility leading-* {
+  line-height: --value(ratio) / --modifier(integer);
+}
+
+.checkout-summary {
+  @apply grid;
+  /* expect: error declaration-property-value-no-unknown */
+  tab-size: --vlaue(integer);
+  /* expect: error declaration-property-value-no-unknown */
+  color: rebeccapurpel;
+
+  @variant checkout-ready {
+    display: flex;
+  }
+}
+
+/* expect: error at-rule-no-unknown */
+@tailwnd base;

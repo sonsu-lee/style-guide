@@ -1,0 +1,47 @@
+{
+  "name": "@sonsu-lee/eslint-plugin",
+  "version": "0.0.0",
+  "description": "Type-aware lint rules for ESLint",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonsu-lee/style-guide.git",
+    "directory": "packages/eslint-plugin"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "8.74.0",
+    "ts-api-utils": "2.5.0"
+  },
+  "devDependencies": {
+    "@sonsu-lee/oxlint-config": "workspace:^",
+    "@types/node": "catalog:",
+    "@typescript-eslint/parser": "8.74.0",
+    "@typescript-eslint/rule-tester": "8.74.0",
+    "eslint": "10.15.0",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:ts6",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0 || ^10.0.0",
+    "typescript": ">=4.8.4 <6.1.0"
+  }
+}

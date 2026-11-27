@@ -52,23 +52,21 @@ function classifyHandler(handler: Handler): 'empty' | Fallback | null {
 
 function isResultWrapper(
   node: TSESTree.Node,
-): node is
-  | TSESTree.AwaitExpression
-  | TSESTree.ChainExpression
-  | TSESTree.TSNonNullExpression
-  | (TSESTree.UnaryExpression & { operator: 'void' }) {
+): node is TSESTree.AwaitExpression | TSESTree.ChainExpression | TSESTree.TSNonNullExpression {
   return (
     node.type === AST_NODE_TYPES.AwaitExpression ||
     node.type === AST_NODE_TYPES.ChainExpression ||
-    node.type === AST_NODE_TYPES.TSNonNullExpression ||
-    (node.type === AST_NODE_TYPES.UnaryExpression && node.operator === 'void')
+    node.type === AST_NODE_TYPES.TSNonNullExpression
   );
 }
 
 function isDiscarded(node: TSESTree.CallExpression): boolean {
   let parent = node.parent;
   while (isResultWrapper(parent)) parent = parent.parent;
-  return parent.type === AST_NODE_TYPES.ExpressionStatement;
+  return (
+    parent.type === AST_NODE_TYPES.ExpressionStatement ||
+    (parent.type === AST_NODE_TYPES.UnaryExpression && parent.operator === 'void')
+  );
 }
 
 const createRule = ESLintUtils.RuleCreator(

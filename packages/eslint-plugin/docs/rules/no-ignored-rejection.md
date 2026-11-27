@@ -41,4 +41,5 @@ The rule has no options or autofix. The caller decides whether to propagate the 
 - It skips `.then(...args, handler)` because the spread can change which argument handles rejection.
 - It does not follow references such as `.catch(showSaveError)` or check whether a handler does enough to report a failure. A handler that only logs an error can still leave the caller unaware.
 - It treats `void` as an `undefined` result without inspecting the expression for side effects.
+- An explicit `void` discards the chain even in an expression-bodied event handler.
 - For a constant fallback returned from an arrow expression, the rule does not follow the chain to see whether that arrow's caller reads the result.

@@ -53,6 +53,10 @@ tester.run('no-ignored-rejection', noIgnoredRejection, {
   ],
   invalid: [
     {
+      ...withOrderService('const submit = () => void saveOrder(id).catch(() => undefined);'),
+      errors: [{ messageId: 'discardedFallback' }],
+    },
+    {
       ...withOrderService('await saveOrder(id).catch(() => {});'),
       errors: [{ messageId: 'emptyHandler' }],
     },

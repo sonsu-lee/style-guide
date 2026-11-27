@@ -8,10 +8,12 @@
     "typecheck": "tsc && tsc -p apps/service && tsc -p apps/react && tsc -p apps/nest"
   },
   "devDependencies": {
+    "@sonsu-lee/eslint-config": "workspace:^",
     "@sonsu-lee/oxlint-config": "workspace:^",
     "@types/node": "catalog:",
     "@types/react": "19.3.3",
     "@types/react-dom": "19.3.0",
+    "eslint": "10.15.0",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
     "react": "19.3.1",

@@ -86,6 +86,28 @@ markSynced(order);
 
 **What it cannot see.** JavaScript-only presets without type-aware linting and calls on `any` do not provide the promise type this check needs.
 
+### Rejections that are silently dropped
+
+**Failure it prevents.** Cache warmup fails but the caller still marks the region ready.
+
+**Reported**
+
+```ts
+await warmCache(region).catch(() => {});
+markWarm(region);
+```
+
+**Allowed**
+
+```ts
+const cached = await readCache(key).catch(() => undefined);
+return cached ?? loadFromDatabase(key);
+```
+
+**Profile and severity.** `@sonsu-lee/eslint-config`, not Oxlint, reports `sonsu-lee-eslint/no-ignored-rejection` as an error.
+
+**What it cannot see.** The rule does not follow a handler passed by reference or decide whether a log message provides adequate recovery.
+
 ## Contributing
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

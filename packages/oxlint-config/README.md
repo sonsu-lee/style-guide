@@ -108,6 +108,30 @@ return cached ?? loadFromDatabase(key);
 
 **What it cannot see.** The rule does not follow a handler passed by reference or decide whether a log message provides adequate recovery.
 
+### Ternaries
+
+**Failure it prevents.** A second shipping threshold can be added to the wrong arm of a nested fee calculation.
+
+**Reported:** `return member ? 0 : subtotal >= 50 ? 0 : 5;`
+
+**Allowed:** `if (member || subtotal >= 50) return 0; return 5;`
+
+**Profile and severity.** Base, error, including JSX.
+
+**What it cannot see.** The rule detects the operator, not whether the thresholds are correct.
+
+### Implicit boolean checks
+
+**Failure it prevents.** A missing feature flag takes the disabled path instead of using the account default.
+
+**Reported:** `if (flags.betaCheckout)` for an optional boolean; `!!coupon`.
+
+**Allowed:** `flags.betaCheckout === true`, `flags.betaCheckout ?? defaults.betaCheckout`, and `Boolean(coupon)`.
+
+**Profile and severity.** Base reports double negation; the type-aware profile reports nullable booleans in conditions. Both are errors.
+
+**What it cannot see.** `Boolean({ ok: false })` is true. Read `.ok` when the result object carries a success flag. Numeric conversion such as `+quantityText` remains allowed.
+
 ## Contributing
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

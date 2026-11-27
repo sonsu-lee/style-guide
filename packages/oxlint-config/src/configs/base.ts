@@ -28,5 +28,11 @@ export const base: OxlintConfig = {
     // A returned `undefined` can be a recovery value. Do not suggest an empty block instead:
     // sonsu-lee-eslint/no-ignored-rejection reports empty rejection handlers.
     'unicorn/no-useless-undefined': ['error', { checkArrowFunctionBody: false }],
+    // Outside the categories, chosen individually under ADR 0006. Use branches in JSX too.
+    'no-ternary': 'error',
+    // Reports a subset of no-ternary.
+    'no-unneeded-ternary': 'off',
+    // Name boolean conversions with Boolean(value); numeric and string shorthand stay allowed.
+    'no-implicit-coercion': ['error', { boolean: true, number: false, string: false }],
   },
 };

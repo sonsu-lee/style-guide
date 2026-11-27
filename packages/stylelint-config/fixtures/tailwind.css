@@ -14,8 +14,24 @@
   color: var(--color-checkout);
 }
 
+@utility tab-* {
+  tab-size: --value(--tab-size-*, integer, [integer]);
+}
+
+@utility opacity-* {
+  opacity: calc(--value(integer) * 1%);
+}
+
+@utility leading-* {
+  line-height: --value(ratio) / --modifier(integer);
+}
+
 .checkout-summary {
   @apply grid;
+  /* expect: error declaration-property-value-no-unknown */
+  tab-size: --vlaue(integer);
+  /* expect: error declaration-property-value-no-unknown */
+  color: rebeccapurpel;
 
   @variant checkout-ready {
     display: flex;

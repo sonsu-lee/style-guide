@@ -15,8 +15,8 @@ const tailwindAtRules = [
 const config: Config = {
   extends: ['stylelint-config-recommended'],
   rules: {
-    // The CSS prelude check rejects Tailwind utility names in @apply.
-    'at-rule-prelude-no-invalid': [true, { ignoreAtRules: ['apply'] }],
+    // Preserve recommended's @media exception and allow Tailwind utility names in @apply.
+    'at-rule-prelude-no-invalid': [true, { ignoreAtRules: ['media', 'apply'] }],
     // Tailwind CSS v4 directives.
     'at-rule-no-unknown': [true, { ignoreAtRules: tailwindAtRules }],
   },

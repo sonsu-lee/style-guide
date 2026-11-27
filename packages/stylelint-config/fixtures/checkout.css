@@ -36,3 +36,12 @@
 /* expect: error block-no-empty */
 .checkout-placeholder {
 }
+
+@media (width >= 40rem) {
+  .checkout-summary {
+    display: grid;
+  }
+}
+
+/* expect: error at-rule-no-unknown */
+@value accent: #246;

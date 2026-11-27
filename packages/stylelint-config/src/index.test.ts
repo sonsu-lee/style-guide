@@ -30,3 +30,13 @@ test.each(files)('matches all expected CSS diagnostics in %s', async (file) => {
 
   expect(actual.toSorted()).toEqual(expectedDiagnostics(source).toSorted());
 });
+
+test('reports a malformed media query once', async () => {
+  const { results } = await stylelint.lint({
+    code: '@media screen and { .checkout-summary { display: grid; } }',
+    config,
+  });
+  const rules = results.flatMap(({ warnings }) => warnings.map(({ rule }) => rule));
+
+  expect(rules).toEqual(['media-query-no-invalid']);
+});

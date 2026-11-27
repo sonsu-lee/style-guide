@@ -26,6 +26,8 @@ export default defineConfig({
 
 Register the plugin with `name: "sonsu-lee"`. Without an alias, Oxlint derives the namespace `@sonsu-lee` from the scoped package name.
 
+With Yarn PnP, Oxlint cannot resolve a plugin by package name. Pass the resolved URL instead: `specifier: import.meta.resolve('@sonsu-lee/oxlint-plugin')`.
+
 ## Rules
 
 | Rule | Description |

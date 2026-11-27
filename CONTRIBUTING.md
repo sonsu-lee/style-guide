@@ -115,7 +115,7 @@ Add a term to this table before using a new one.
 | Rules | `RuleTester` valid and invalid cases |
 | `preset` merging | Each row of the merge table in ARCHITECTURE.md has a test |
 | Profiles | `src/profiles.test.ts` runs Oxlint on generated files for each option |
-| Published files | Install the `pnpm pack` tarballs in a scratch project and run Oxlint, including a project that installs only the preset. Run Oxlint once without pnpm's bin shim (`node node_modules/oxlint/bin/oxlint`): the `NODE_PATH` the shim sets can hide a plugin that does not resolve |
+| Published files | Publish the packages with `pnpm publish` to a local registry, such as Verdaccio, so `workspace:` and `catalog:` versions are rewritten as on npm. In scratch projects that install Oxlint and the preset but not the plugin, run Oxlint from the CLI and through `oxlint --lsp` with npm, pnpm, Yarn (PnP and `node-modules`), Bun, and Deno, on macOS and Windows, including a project path with a space and `#`. Run it once without pnpm's bin shim (`node node_modules/oxlint/bin/oxlint`): the `NODE_PATH` the shim sets can hide a plugin that does not resolve. Also install only the plugin and register it as its README shows |
 | Upstream constraints | Re-run the checks in [docs/reference/oxlint-constraints.md](docs/reference/oxlint-constraints.md) when upgrading Oxlint |
 
 ## Decisions

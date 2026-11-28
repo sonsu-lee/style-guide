@@ -144,6 +144,24 @@ return cached ?? loadFromDatabase(key);
 
 **What it cannot see.** The rule does not judge names or know what a callback costs. It does not rewrite the expression.
 
+### React Hooks
+
+**Failure it prevents.** A memo or callback keeps the previous search term when its dependency array omits that term.
+
+**Reported:** `useMemo(() => search(term), [])`.
+
+**Allowed:** `useMemo(() => search(term), [term])`.
+
+**Profile and severity.** The React profile follows the [React Hooks recommended config](https://github.com/facebook/react/blob/main/packages/eslint-plugin-react-hooks/src/index.ts) for these rules:
+
+| Rule | Severity |
+| --- | --- |
+| `rules-of-hooks`, `set-state-in-effect`, `set-state-in-render` | Error |
+| `exhaustive-deps`, `incompatible-library` | Warning |
+| `exhaustive-effect-dependencies`, `memo-dependencies`, `no-deriving-state-in-effects` | Off; duplicate findings |
+
+**What it cannot see.** A complete dependency list does not establish that a component needs an Effect.
+
 ## Contributing
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

@@ -1,6 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 
 import { importedName, importSpecifierName } from '../utils/imported-name.ts';
+import { isSetupResult } from '../utils/machine-setup.ts';
 
 function isFactory(name: string | null): boolean {
   return name === 'createMachine' || name === 'setup' || name === 'createActor';
@@ -39,16 +40,25 @@ export const noMachineInRender: Rule = {
         }
       },
       CallExpression(node) {
-        // 1. Only walk ancestors for local names that can resolve to an XState factory.
+        // 1. Resolve the callee to an XState factory without accepting shadowed names.
+        //    A `setup()` result is a factory too, so `machineSetup.createMachine()` counts;
+        //    an inline `setup({...})` call is reported on its own visit.
         const { callee } = node;
+        let factoryCall = false;
         if (callee.type === 'Identifier') {
           if (!factoryNames.has(callee.name)) return;
+          factoryCall = isFactory(importedName(context, callee, 'xstate'));
         } else {
           if (callee.type !== 'MemberExpression' || callee.computed) return;
           const { object, property } = callee;
-          if (object.type !== 'Identifier' || !namespaceNames.has(object.name)) return;
           if (property.type !== 'Identifier' || !isFactory(property.name)) return;
+          if (object.type === 'Identifier' && namespaceNames.has(object.name)) {
+            factoryCall = isFactory(importedName(context, callee, 'xstate'));
+          } else if (object.type === 'Identifier' && property.name === 'createMachine') {
+            factoryCall = isSetupResult(context, object);
+          }
         }
+        if (!factoryCall) return;
 
         // 2. The nearest function decides whether the call runs during render or in a callback.
         let current: ESTree.Node = node.parent;
@@ -67,10 +77,7 @@ export const noMachineInRender: Rule = {
               name = current.parent.id.name;
             if (name === undefined || !/^(?:[A-Z]|use[A-Z0-9])/u.test(name)) return;
 
-            // 3. A component or hook can still shadow the imported factory.
-            if (isFactory(importedName(context, callee, 'xstate'))) {
-              context.report({ node, messageId: 'machineInRender' });
-            }
+            context.report({ node, messageId: 'machineInRender' });
             return;
           }
           current = current.parent;

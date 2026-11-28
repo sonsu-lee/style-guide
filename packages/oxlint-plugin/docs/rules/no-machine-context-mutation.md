@@ -27,6 +27,6 @@ const addItem = assign(({ context, event }) => ({ items: [...context.items, even
 
 ## What the rule cannot see
 
-The rule follows a parameter named `context` inside an inline XState callback, including a destructured parameter. It does not follow aliases, moved configuration objects, re-exported helpers, or callbacks passed by reference. It recognizes `.createMachine` and `.provide` by member name in files that import XState.
+The rule follows a `context` property destructured from the parameter of an inline XState callback. A parameter that receives the whole argument object is not treated as machine context, so `fromPromise((context) => ...)` is ignored. It does not follow aliases, moved configuration objects, re-exported helpers, or callbacks passed by reference. It recognizes `.createMachine` and `.provide` by member name in files that import XState.
 
 Callbacks passed to a setup object's `.assign()` or `.extend()`, and callbacks passed to `enqueue()` or `enqueue.assign()`, are not traced back to the machine.

@@ -95,6 +95,28 @@ setup({
 });
       `,
     },
+    {
+      name: 'does not treat an actor argument object as machine context',
+      code: `
+import { fromPromise } from 'xstate';
+
+const load = fromPromise((context) => {
+  context.input.completed = true;
+  return context.input;
+});
+      `,
+    },
+    {
+      name: 'does not treat the whole assign argument object as machine context',
+      code: `
+import { assign } from 'xstate';
+
+assign((context) => {
+  delete context.coupon;
+  return context;
+});
+      `,
+    },
   ],
   invalid: [
     {
@@ -131,18 +153,6 @@ import { setup } from 'xstate';
 
 checkoutMachine.provide({
   guards: { canRetry: ({ context }) => ++context.retries < 3 },
-});
-      `,
-      errors: [{ messageId: 'contextMutation' }],
-    },
-    {
-      name: 'detects deletion from context inside a directly imported assign',
-      code: `
-import { assign } from 'xstate';
-
-assign((context) => {
-  delete context.coupon;
-  return context;
 });
       `,
       errors: [{ messageId: 'contextMutation' }],

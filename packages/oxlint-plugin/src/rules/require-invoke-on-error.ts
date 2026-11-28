@@ -1,6 +1,7 @@
-import type { ESTree, Rule, Scope } from '@oxlint/plugins';
+import type { ESTree, Rule } from '@oxlint/plugins';
 
 import { importedName } from '../utils/imported-name.ts';
+import { isSetupExpression, isSetupResult } from '../utils/machine-setup.ts';
 
 type Property = Extract<ESTree.Node, { type: 'Property' }>;
 
@@ -52,24 +53,10 @@ export const requireInvokeOnError: Rule = {
       if (callee.type !== 'MemberExpression' || callee.computed) return false;
       if (callee.property.type !== 'Identifier' || callee.property.name !== 'createMachine')
         return false;
-
-      let receiver: ESTree.Node | null | undefined = callee.object;
-      if (receiver.type === 'Identifier') {
-        const { name } = receiver;
-        let scope: Scope | null = context.sourceCode.getScope(receiver);
-        while (scope && !scope.set.has(name)) scope = scope.upper;
-        const definition = scope?.set.get(name)?.defs[0];
-        if (definition?.type !== 'Variable' || definition.node.type !== 'VariableDeclarator')
-          return false;
-        if (definition.node.id.type !== 'Identifier') return false;
-        if (definition.parent?.type !== 'VariableDeclaration' || definition.parent.kind !== 'const')
-          return false;
-        receiver = definition.node.init;
-      }
-      return (
-        receiver?.type === 'CallExpression' &&
-        importedName(context, receiver.callee, 'xstate') === 'setup'
-      );
+      const { object } = callee;
+      return object.type === 'Identifier'
+        ? isSetupResult(context, object)
+        : isSetupExpression(context, object);
     }
 
     function check(node: ESTree.Node, invoke: Property): void {

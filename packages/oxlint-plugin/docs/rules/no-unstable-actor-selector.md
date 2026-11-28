@@ -6,6 +6,8 @@ Keep XState selector results stable when the selected data has not changed.
 
 The default comparison is reference equality. A new object or array compares unequal on every snapshot, even when its fields are unchanged. Select fields separately or pass a comparator that checks the fields the component uses.
 
+The rule reads object and array literals returned directly, and from the operands that can become the result: both operands of `??` and `||`, the right operand of `&&`, and both branches of `?:`.
+
 Examples of code that this rule reports:
 
 ```ts

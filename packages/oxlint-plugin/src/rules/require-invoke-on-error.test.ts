@@ -136,5 +136,29 @@ checkoutSetup.createMachine({
       `,
       errors: [{ messageId: 'missingOnError' }],
     },
+    {
+      name: 'checks a machine from an extended setup held in a const',
+      code: `
+import { setup } from 'xstate';
+
+const baseSetup = setup({});
+const checkoutSetup = baseSetup.extend({ guards: {} });
+checkoutSetup.createMachine({
+  invoke: { src: 'reserveStock', onDone: 'reserved' },
+});
+      `,
+      errors: [{ messageId: 'missingOnError' }],
+    },
+    {
+      name: 'checks a machine from an inline extended setup',
+      code: `
+import { setup } from 'xstate';
+
+setup({}).extend({ guards: {} }).createMachine({
+  invoke: { src: 'reserveStock', onDone: 'reserved' },
+});
+      `,
+      errors: [{ messageId: 'missingOnError' }],
+    },
   ],
 });

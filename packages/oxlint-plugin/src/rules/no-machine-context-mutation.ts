@@ -41,11 +41,27 @@ export const noMachineContextMutation: Rule = {
       while (root.type === 'MemberExpression') root = root.object;
       if (root.type !== 'Identifier' || root.name !== 'context') return;
 
-      // 2. The nearest binding must be a parameter, not a shadowing local variable.
+      // 2. Machine context is a `context` property destructured from the callback parameter.
+      //    A whole parameter receives the actor argument object, not machine context.
       let scope: Scope | null = context.sourceCode.getScope(root);
       while (scope && !scope.set.has(root.name)) scope = scope.upper;
       const definition = scope?.set.get(root.name)?.defs[0];
       if (definition?.type !== 'Parameter') return;
+      let binding: ESTree.Node = definition.name;
+      let parent: ESTree.Node | null = binding.parent;
+      let destructuresContext = false;
+      while (parent && parent !== definition.node) {
+        if (parent.type === 'Property' && parent.value === binding && !parent.computed) {
+          destructuresContext =
+            parent.key.type === 'Identifier'
+              ? parent.key.name === 'context'
+              : parent.key.type === 'Literal' && parent.key.value === 'context';
+          break;
+        }
+        binding = parent;
+        parent = binding.parent;
+      }
+      if (!destructuresContext) return;
 
       // 3. Find the callback's owner without crossing another function or helper call.
       let current = definition.node.parent;

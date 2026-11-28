@@ -64,6 +64,18 @@ function CheckoutPanel({ workflow }) {
 }
       `,
     },
+    {
+      name: 'allows a factory object that does not come from setup',
+      code: `
+import { setup } from 'xstate';
+
+const workflow = createWorkflow();
+
+function CheckoutPanel() {
+  return workflow.createMachine({ initial: 'idle' });
+}
+      `,
+    },
   ],
   invalid: [
     {
@@ -121,6 +133,56 @@ const CheckoutPanel = function () {
 import XState from 'xstate';
 
 const useCheckout = () => XState.createMachine({});
+      `,
+      errors: [{ messageId: 'machineInRender' }],
+    },
+    {
+      name: 'creates a machine through a module-level setup result during render',
+      code: `
+import { setup } from 'xstate';
+
+const machineSetup = setup({ actions: {} });
+
+function CheckoutPanel() {
+  const machine = machineSetup.createMachine({ initial: 'idle' });
+  return machine;
+}
+      `,
+      errors: [{ messageId: 'machineInRender' }],
+    },
+    {
+      name: 'creates a machine from an inline setup result in a hook',
+      code: `
+import { setup } from 'xstate';
+
+const useCheckout = () => setup({}).createMachine({ initial: 'idle' });
+      `,
+      errors: [{ messageId: 'machineInRender' }],
+    },
+    {
+      name: 'creates a machine through an extended setup result during render',
+      code: `
+import { setup } from 'xstate';
+
+const baseSetup = setup({});
+const appSetup = baseSetup.extend({ guards: {} });
+
+function CheckoutPanel() {
+  return appSetup.createMachine({ initial: 'idle' });
+}
+      `,
+      errors: [{ messageId: 'machineInRender' }],
+    },
+    {
+      name: 'creates a machine through an inline extended setup during render',
+      code: `
+import { setup } from 'xstate';
+
+const appSetup = setup({}).extend({ guards: {} });
+
+function CheckoutPanel() {
+  return appSetup.createMachine({ initial: 'idle' });
+}
       `,
       errors: [{ messageId: 'machineInRender' }],
     },

@@ -7,7 +7,21 @@ function createsCollection(node: ESTree.Node): boolean {
   while (current.type === 'TSAsExpression' || current.type === 'TSSatisfiesExpression') {
     current = current.expression;
   }
-  return current.type === 'ObjectExpression' || current.type === 'ArrayExpression';
+  switch (current.type) {
+    case 'ObjectExpression':
+    case 'ArrayExpression':
+      return true;
+    case 'LogicalExpression':
+      // A literal on the left of `&&` is always truthy, so only the right side can be the result.
+      return (
+        (current.operator !== '&&' && createsCollection(current.left)) ||
+        createsCollection(current.right)
+      );
+    case 'ConditionalExpression':
+      return createsCollection(current.consequent) || createsCollection(current.alternate);
+    default:
+      return false;
+  }
 }
 
 export const noUnstableActorSelector: Rule = {

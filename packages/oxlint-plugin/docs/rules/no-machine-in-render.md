@@ -32,4 +32,4 @@ function CheckoutPanel({ input }) {
 
 ## What the rule cannot see
 
-The rule uses function names to recognize components and hooks. It does not follow functions passed by reference, re-exported XState imports, or calls hidden in helpers.
+The rule uses function names to recognize components and hooks. It resolves a same-file `const` holding `setup()` or an extended setup, so `machineSetup.createMachine(...)` in render is reported. It does not follow functions passed by reference, re-exported XState imports, a `createMachine` destructured from a setup result, a setup result imported from another file, or calls hidden in helpers.

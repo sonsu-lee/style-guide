@@ -74,6 +74,22 @@ import { Checkout } from './checkout-context';
 const summary = Checkout.useSelector((snapshot) => ({ total: snapshot.context.total }));
       `,
     },
+    {
+      name: 'falls back to a primitive without allocating',
+      code: `
+import { useSelector } from '@xstate/react';
+
+const total = useSelector(actorRef, (snapshot) => snapshot.context.total ?? 0);
+      `,
+    },
+    {
+      name: 'ignores a truthy literal on the left of a logical and',
+      code: `
+import { useSelector } from '@xstate/react';
+
+const total = useSelector(actorRef, (snapshot) => [] && snapshot.context.total);
+      `,
+    },
   ],
   invalid: [
     {
@@ -106,6 +122,26 @@ const summary = useActorSlice(actorRef, (snapshot) => {
   if (snapshot.matches('submitting')) return [];
   return snapshot.context.items;
 });
+      `,
+      errors: [{ messageId: 'unstableSelector' }],
+    },
+    {
+      name: 'allocates a fallback array in a nullish branch',
+      code: `
+import { useSelector } from '@xstate/react';
+
+const items = useSelector(actorRef, (snapshot) => snapshot.context.items ?? []);
+      `,
+      errors: [{ messageId: 'unstableSelector' }],
+    },
+    {
+      name: 'allocates an object in either conditional branch',
+      code: `
+import { useSelector } from '@xstate/react';
+
+const summary = useSelector(actorRef, (snapshot) =>
+  snapshot.matches('ready') ? { total: 1 } : { total: 2 },
+);
       `,
       errors: [{ messageId: 'unstableSelector' }],
     },

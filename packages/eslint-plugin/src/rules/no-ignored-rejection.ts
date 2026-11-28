@@ -41,8 +41,8 @@ function unwrapTypeAssertions(expression: TSESTree.Expression): TSESTree.Express
 }
 
 function constantFallback(value: TSESTree.Expression | null): Fallback | null {
-  const expression = value === null ? null : unwrapTypeAssertions(value);
-  if (expression === null) return 'undefined';
+  if (value === null) return 'undefined';
+  const expression = unwrapTypeAssertions(value);
   if (expression.type === AST_NODE_TYPES.Identifier && expression.name === 'undefined') {
     return 'undefined';
   }

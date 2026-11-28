@@ -18,7 +18,7 @@ export default defineConfig(
             ],
             patterns: [
               {
-                group: ['@/features/*/internal/*'],
+                group: ['@/features/*/internal', '@/features/*/internal/**'],
                 message: 'Import from the feature entry point, for example @/features/orders.',
               },
             ],

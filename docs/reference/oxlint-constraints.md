@@ -1,6 +1,6 @@
 # Oxlint constraints
 
-Upstream behavior the design depends on. Checked with oxlint 1.90.0, oxlint-tsgolint 7.0.2005, eslint 10.14.0, and eslint-plugin-oxlint 1.90.0 on 2026-10-31 and 2026-11-01. JS plugin resolution was checked with pnpm 12.16.1, and with the package managers listed under JS plugins on 2026-11-27. Re-check when upgrading Oxlint.
+Upstream behavior the design depends on. Checked with oxlint 1.90.0, oxlint-tsgolint 7.0.2005, eslint 10.14.0, and eslint-plugin-oxlint 1.90.0 on 2026-10-31 and 2026-11-01, and with eslint 10.15.0 on 2026-11-27. JS plugin resolution was checked with pnpm 12.16.1, and with the package managers listed under JS plugins on 2026-11-27. Re-check when upgrading Oxlint.
 
 Evidence: **experiment** = reproduced locally with a minimal config; **docs** = official documentation; **issue** = upstream issue tracker.
 
@@ -63,10 +63,11 @@ An extended config with `plugins: []` adds nothing. ESLint core rules stayed ava
 - An unawaited call and, with `ignoreVoid: false`, a voided promise report `typescript(no-floating-promises)`. On async `forEach` callbacks and JSX event handlers, `checksVoidReturn: false` removes the duplicate `typescript(no-misused-promises)` without suppressing `typescript(strict-void-return)`. (experiment)
 - Missing Effect dependencies triggered both `react-hooks(exhaustive-deps)` and `react(exhaustive-effect-dependencies)`; missing memo or callback dependencies also triggered `react(memo-dependencies)`. Synchronous state derived from props in an Effect triggered both `react(set-state-in-effect)` and `react(no-deriving-state-in-effects)`. (experiment)
 - `checksVoidReturn: false` also drops inherited void method signatures. Keeping `inheritedMethods: true` preserves the interface diagnostic without reintroducing duplicate reports for JSX handlers and `forEach`. (experiment)
-- Empty rejection handlers, including comment-only blocks, were not diagnosed by Oxlint. With `checkArrowFunctionBody: false`, a concise `() => undefined` remains valid when read as a recovery value. The ESLint scenario distinguishes used and discarded values. (experiment)
-- A switch with a `default` still reports a missing union member. Nullable booleans report with `allowNullableBoolean: false`; non-null strings and nullable objects remain allowed. `!!value` reports with Boolean coercion enabled while unary `+` remains allowed. Both JS and JSX ternaries report `eslint(no-ternary)`. (experiment)
+- Empty rejection handlers, including comment-only blocks, were not diagnosed by Oxlint. With `checkArrowFunctionBody: false`, a concise `() => undefined` remains valid whether the value is discarded or read. The ESLint scenario distinguishes used and discarded values. (experiment)
+- A switch with a `default` still reports a missing union member. Nullable booleans report with `allowNullableBoolean: false`; non-null strings and nullable objects remain allowed. `!!value` reports with Boolean coercion enabled, while unary `+` remains allowed by `number: false`. Both JS and JSX ternaries report `eslint(no-ternary)`. (experiment)
 - Direct component calls report `react(capitalized-calls)`; `Boolean` and `Number` calls do not. Array indices used as list keys report `react(no-array-index-key)`. (experiment)
-- Restricting the named `useEffect` import also reports `import * as React`, at the import rather than the call. A call-specific `oxlint-disable-next-line` with a reason still suppresses its rule. Import boundaries can instead use `paths`, `patterns[].group`, messages and a folder override. (experiment)
+- Restricting `useEffect` from `react` with `paths: [{ name: 'react', importNames: ['useEffect'] }]` also reports `import * as React`, at the import rather than the call. A call-specific `oxlint-disable-next-line` with a reason still suppresses the rule at that call. Import boundaries can instead use `paths`, `patterns[].group`, messages and a folder override. (experiment)
+- `patterns[].group` uses `fast_glob`, where `*` does not cross `/`: `@/features/*/internal/*` misses `internal` itself and nested folders. List `@/features/*/internal` and `@/features/*/internal/**` together. (experiment)
 - `nextjs/no-img-element` reports `next(no-img-element)`. JSON diagnostics give a cwd-relative `filename`, `code`, `severity` (`warning` or `error`) and one-based `labels[0].span.line`. Warnings alone exit 0, or 1 with `--max-warnings 0`. (experiment)
 
 ## JS plugins
@@ -89,7 +90,7 @@ An extended config with `plugins: []` adds nothing. ESLint core rules stayed ava
 - tsgolint bundles a TypeScript 7 compiler. Type-aware rules ran in a project that installs `typescript@6.0.3`. The tsconfig must not use options removed in TypeScript 7. (experiment, docs)
 - With type-aware linting off, type-aware rules in the config are skipped without an error. (experiment)
 - With `options.typeAware: true`, `--print-config` works without `oxlint-tsgolint`. Linting fails with `Failed to find tsgolint executable`. (experiment)
-- `OXLINT_TSGOLINT_PATH` can specify the executable directly. On the pinned Bulletproof React apps, TypeScript 7 rejected `baseUrl` and `moduleResolution: node`; the supplemental run removed the former or switched the latter to `bundler` without changing application code. (experiment)
+- `OXLINT_TSGOLINT_PATH` can specify the executable directly. TypeScript 7 rejected `baseUrl` and `moduleResolution: node`; removing the former or switching the latter to `bundler` fixed the run without changing application code. (experiment)
 - tsgolint also lints JavaScript files outside the tsconfig `include`: `typescript/require-await` reported a `.js` file in a project whose tsconfig includes only `src/**/*.ts`. (experiment)
 
 ## ESLint interop

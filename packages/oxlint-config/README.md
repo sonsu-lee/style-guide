@@ -273,7 +273,7 @@ preset(
           ],
           patterns: [
             {
-              group: ['@/features/*/internal/*'],
+              group: ['@/features/*/internal', '@/features/*/internal/**'],
               message: 'Import from the feature entry point, for example @/features/orders.',
             },
           ],
@@ -287,7 +287,7 @@ preset(
 );
 ```
 
-The rule compares import strings: a relative path is not the same as an alias. Root rules replace the entire inherited entry, including its path list. For APIs whose declarations you own, `@deprecated` also lets `typescript/no-deprecated` report use of retired symbols.
+The rule compares import strings: a relative path is not the same as an alias, and a `paths` entry matches the whole specifier, so cover subpaths with `patterns`. Root rules replace the entire inherited entry, including its path list. The example maps `@/*` to `src/boundaries/*`; override `files` are paths relative to the config, not aliases, and disabling the rule there also lifts the feature pattern. For APIs whose declarations you own, `@deprecated` also lets `typescript/no-deprecated` report use of retired symbols.
 
 ## Contributing
 

@@ -162,6 +162,23 @@ return cached ?? loadFromDatabase(key);
 
 **What it cannot see.** A complete dependency list does not establish that a component needs an Effect.
 
+### Effects
+
+**Failure it prevents.** Copying a derived prop to state in an Effect makes the first render show the previous value.
+
+**Reported:** a call to `useEffect`, `useLayoutEffect`, or `useInsertionEffect` without a reason.
+
+**Allowed:**
+
+```tsx
+// effect: Keep the chat connection subscribed to the room on screen.
+useEffect(() => connect(roomId), [roomId]);
+```
+
+**Profile and severity.** React, error. The reason does not suppress dependency or state checks.
+
+**What it cannot see.** Re-exports, destructured namespace members, and whether a stated reason is true. For alternatives, see [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect).
+
 ## Contributing
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

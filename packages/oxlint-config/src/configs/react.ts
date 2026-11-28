@@ -14,6 +14,8 @@ export const react: OxlintConfig = {
     'react/exhaustive-effect-dependencies': 'off',
     'react/memo-dependencies': 'off',
     'react/no-deriving-state-in-effects': 'off',
+    // Name the external system without disabling exhaustive-deps or the other Effect checks.
+    'sonsu-lee/require-effect-reason': 'error',
     // The JSX transform that React 17 introduced does not need React in scope.
     'react/react-in-jsx-scope': 'off',
     // Type-aware. React handlers such as `onClick={() => setCount(count + 1)}` return the setter's

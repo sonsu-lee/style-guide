@@ -35,6 +35,15 @@ TypeScript와 타입 정보가 필요한 규칙이 기본으로 켜지며, 이 �
 
 패키지 구조는 [ARCHITECTURE.md](ARCHITECTURE.md)(영어)에, 설계를 이렇게 정한 이유는 [docs/decisions](docs/decisions)(영어)에 있습니다.
 
+## 린트 결과 읽기
+
+| 심각도 | 대응                                                        |
+| ------ | ----------------------------------------------------------- |
+| 오류   | 머지하기 전에 고칩니다.                                     |
+| 경고   | 코드를 검토하고, 고쳐도 더 명확해지지 않으면 그대로 둡니다. |
+
+경고만 있으면 린트 명령은 성공합니다. 판단 기준은 [ADR 0006](docs/decisions/0006-rule-severity-and-policy-rules.md)을 참고하세요.
+
 ## 문의
 
 [GitHub Issues](https://github.com/sonsu-lee/style-guide/issues)에 이슈를 등록해 주세요.

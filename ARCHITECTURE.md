@@ -67,6 +67,10 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 | `src/rules/<rule-id>.test.ts` | `RuleTester` cases taken from the rule's docs |
 | `docs/rules/<rule-id>.md`     | Code the rule reports and code it allows      |
 
+### `packages/scenarios`
+
+Each app under `apps/` runs the preset against a small consumer project. Tests in `src/` compare the file, line, rule, and severity of every diagnostic with fixture markers and check the exit status.
+
 ## Invariants
 
 - **`preset()` returns a root config.** It is never meant to be placed inside another config's `extends`.
@@ -74,7 +78,7 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 - **Profile configs are not exported.** Exporting them would invite use through `extends`, which loses the root-only fields.
 - **Profiles own their plugins.** Root-level `plugins` replaces Oxlint's default plugin set, while `plugins` inside `extends` can only add to it. `preset()` sets the root `plugins` to `[]` (or the user's list) to remove the defaults, and each config in `src/configs/` adds the plugins it needs. Every config sets `plugins`, even to `[]`, because Oxlint adds its default plugins for a config that omits it.
 - **Profile order is fixed**: base, typescript, typeAware, node, react, vitest, nestjs, then the user's `extends`. Later configs win, so a framework profile can change the rules of the language and runtime profiles before it.
-- **Rules come from Oxlint categories.** base turns on `correctness`, `suspicious`, `perf`, and `pedantic`; profiles add plugins, and set a rule only to turn off or relax a duplicate or a rule that reports standard code of the stack, or to choose the options of a rule the categories turn on, with the reason next to it. See [ADR 0005](docs/decisions/0005-profile-rule-sources.md).
+- **Rules come from Oxlint categories.** base turns on `correctness`, `suspicious`, `perf`, and `pedantic`; profiles add plugins, and set a rule only to turn off or relax a duplicate or a rule that reports standard code of the stack, or to choose the options of a rule the categories turn on, with the reason next to it. See [ADR 0005](docs/decisions/0005-profile-rule-sources.md). Rules outside the categories and severity grades follow [ADR 0006](docs/decisions/0006-rule-severity-and-policy-rules.md).
 - **Type-aware linting is the default.** `typescript` and `typeAware` are on unless `typescript: false`, so profiles may assume type information.
 - **The custom plugin is registered with an alias and a resolved URL**: `{ name: 'sonsu-lee', specifier: import.meta.resolve('@sonsu-lee/oxlint-plugin') }`. Oxlint resolves a package name from the directory of the user's root config, so a project that installs only the preset finds the plugin only through the `NODE_PATH` that pnpm's bin shim sets. Relative specifiers are rejected inside `extends`. An unaliased scoped package gets the namespace `@sonsu-lee`. The plugin sets `preferUnplugged` because Oxlint cannot load a JS plugin from the zip cache of Yarn PnP.
 - **External JS plugins live only in the profiles that need them.** JS plugins cost load time, so `base` does not include them. `base` registers only `@sonsu-lee/oxlint-plugin`.

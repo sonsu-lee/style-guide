@@ -1,0 +1,22 @@
+{
+  "name": "@sonsu-lee/scenarios",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc && tsc -p apps/service && tsc -p apps/react && tsc -p apps/nest"
+  },
+  "devDependencies": {
+    "@sonsu-lee/oxlint-config": "workspace:^",
+    "@types/node": "catalog:",
+    "@types/react": "19.3.3",
+    "@types/react-dom": "19.3.0",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "catalog:ts6",
+    "vitest": "catalog:"
+  }
+}

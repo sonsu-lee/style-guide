@@ -35,6 +35,15 @@ TypeScript with type-aware rules is on by default, which needs `oxlint-tsgolint`
 
 How the packages fit together: [ARCHITECTURE.md](ARCHITECTURE.md). Why they are built this way: [docs/decisions](docs/decisions).
 
+## What a diagnostic means
+
+| Severity | Action                                                     |
+| -------- | ---------------------------------------------------------- |
+| Error    | Fix the violation before merging.                          |
+| Warning  | Review the code; keep it if the alternative is no clearer. |
+
+Warnings alone do not fail the lint command. See [ADR 0006](docs/decisions/0006-rule-severity-and-policy-rules.md).
+
 ## Getting help
 
 Open an issue on [GitHub Issues](https://github.com/sonsu-lee/style-guide/issues).

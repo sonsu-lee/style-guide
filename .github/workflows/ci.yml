@@ -31,12 +31,12 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm typecheck
-
-      # oxlint-config's lint and profile tests run Oxlint with the built @sonsu-lee/oxlint-plugin.
+      # Typecheck reads declarations from workspace packages. Lint and tests load their built code.
       - name: Build
         run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Lint
         run: pnpm lint

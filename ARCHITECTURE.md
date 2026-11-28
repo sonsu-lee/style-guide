@@ -10,7 +10,7 @@ Oxlint is the primary linter. ESLint runs only the rules Oxlint cannot run. Form
 | --- | --- | --- |
 | Oxlint built-in rules | Oxlint | Yes, through tsgolint |
 | `@sonsu-lee/oxlint-plugin` (custom AST rules) | Oxlint as a JS plugin; also runs in ESLint | No |
-| `@sonsu-lee/eslint-plugin` (custom typed rules, planned) | ESLint only | Yes, through typescript-eslint |
+| `@sonsu-lee/eslint-plugin` (custom typed rules) | ESLint only | Yes, through typescript-eslint |
 
 Packages are split by the linter that runs them, not by rule topic.
 
@@ -18,15 +18,14 @@ Packages are split by the linter that runs them, not by rule topic.
 | --- | --- | --- |
 | `@sonsu-lee/oxlint-config` | — | Unpublished |
 | `@sonsu-lee/oxlint-plugin` | `sonsu-lee` | One rule: `no-double-assertion` |
-| `@sonsu-lee/eslint-plugin` | `sonsu-lee-eslint` | Planned for the first rule that needs type information |
-| `@sonsu-lee/eslint-config` | — | Planned with `eslint-plugin` |
+| `@sonsu-lee/eslint-plugin` | `sonsu-lee-eslint` | Reports ignored rejections |
+| `@sonsu-lee/eslint-config` | — | Flat config for TypeScript files |
 | `@sonsu-lee/oxfmt-config` | — | Planned when formatter settings need to be shared |
 
 ```mermaid
 flowchart LR
   OXC[oxlint-config] --> OXP[oxlint-plugin]
-  ESC[eslint-config] -. planned .-> ESP[eslint-plugin]
-  ESC -. planned .-> OXC
+  ESC[eslint-config] --> ESP[eslint-plugin]
 ```
 
 ## Where a new rule goes
@@ -67,6 +66,14 @@ An external ESLint plugin is enabled in exactly one of `oxlint-config` and `esli
 | `src/rules/<rule-id>.test.ts` | `RuleTester` cases taken from the rule's docs |
 | `docs/rules/<rule-id>.md`     | Code the rule reports and code it allows      |
 
+### `packages/eslint-plugin`
+
+`src/rules/` implements rules that need a TypeScript checker. Each rule has typed RuleTester cases and a corresponding page in `docs/rules/`.
+
+### `packages/eslint-config`
+
+`src/preset.ts` configures the TypeScript parser and enables only the typed custom rules. User configs come last. The preset does not depend on the Oxlint packages at runtime.
+
 ### `packages/scenarios`
 
 Each app under `apps/` runs the preset against a small consumer project. Tests in `src/` compare the file, line, rule, and severity of every diagnostic with fixture markers and check the exit status.
@@ -104,5 +111,5 @@ These rules are covered by `packages/oxlint-config/src/preset.test.ts`.
 
 - **Versions.** `oxlint` and `@oxlint/plugins` move together; both come from the workspace catalog. All packages share one version number.
 - **Breaking changes.** Enabling a rule or raising a severity changes users' results. Such changes bump the major version, or the minor version while in 0.x.
-- **TypeScript.** tsgolint ships its own TypeScript 7 compiler, so type-aware rules work in projects that install TypeScript 6. typescript-eslint rejects TypeScript 7, so the planned ESLint packages will use TypeScript 6.
+- **TypeScript.** tsgolint ships its own TypeScript 7 compiler, so type-aware rules work in projects that install TypeScript 6. The ESLint packages use TypeScript 6 because typescript-eslint 8.74 does not support TypeScript 7.
 - **Development toolchain.** Node.js is pinned by `.node-version` and `devEngines.runtime`; pnpm by `packageManager`. Tool-specific files such as `mise.toml` are not committed. Setup details are in [CONTRIBUTING.md](CONTRIBUTING.md#setup).

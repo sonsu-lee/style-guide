@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { expect, it } from 'vitest';
 
-import { runOxlint } from './lint.ts';
+import { runEslint, runOxlint } from './lint.ts';
 import { formatFinding, parseMarkers } from './markers.ts';
 const apps = join(import.meta.dirname, '../apps');
 for (const app of readdirSync(apps, { withFileTypes: true })) {
@@ -14,9 +14,8 @@ for (const app of readdirSync(apps, { withFileTypes: true })) {
       parseMarkers(file, readFileSync(join(cwd, file), 'utf8')),
     );
     const actual = runOxlint(cwd);
-    expect(actual.findings.map(formatFinding).toSorted()).toEqual(
-      expected.map(formatFinding).toSorted(),
-    );
+    const findings = [...actual.findings, ...runEslint(cwd)];
+    expect(findings.map(formatFinding).toSorted()).toEqual(expected.map(formatFinding).toSorted());
     expect(actual.status).toBe(
       Number(expected.some(({ severity, code }) => severity === 'error' && code.endsWith(')'))),
     );

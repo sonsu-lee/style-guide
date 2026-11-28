@@ -79,6 +79,8 @@ Follow the decision flow in [ARCHITECTURE.md](ARCHITECTURE.md#where-a-new-rule-g
 4. Register the rule in `src/index.ts` and in the package's `oxlint.config.ts`, and enable it in `packages/oxlint-config/src/configs/base.ts`.
 5. Add a fixture under `packages/scenarios/apps/<app>/src/<policy>/` that shows the failure the rule prevents and code it must allow.
 
+For a custom rule that reads types, put its examples in `packages/eslint-plugin/docs/rules/` and its implementation and `@typescript-eslint/rule-tester` tests in `packages/eslint-plugin/src/rules/`. Register it in the plugin's `src/index.ts` and enable it in `packages/eslint-config/src/preset.ts`.
+
 Rule guidelines:
 
 - Document what the rule cannot see, for example "resolves only aliases in the same file".
@@ -114,6 +116,7 @@ Add a term to this table before using a new one.
 | Target | How |
 | --- | --- |
 | Rules | `RuleTester` valid and invalid cases |
+| Typed rules | Run `@typescript-eslint/rule-tester` against a TypeScript project and check the same rule through the consumer ESLint config |
 | `preset` merging | Each row of the merge table in ARCHITECTURE.md has a test |
 | Profiles | `src/profiles.test.ts` runs Oxlint on generated files for each option |
 | Preset behavior on realistic code | `packages/scenarios`: each app lints its fixtures and compares the result with the `// expect:` markers |

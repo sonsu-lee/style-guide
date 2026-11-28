@@ -1,0 +1,46 @@
+{
+  "name": "@sonsu-lee/eslint-config",
+  "version": "0.0.0",
+  "description": "ESLint preset for type-aware rules that cannot run in Oxlint",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonsu-lee/style-guide.git",
+    "directory": "packages/eslint-config"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@sonsu-lee/eslint-plugin": "workspace:^",
+    "@types/eslint": "9.6.1",
+    "@typescript-eslint/parser": "8.74.0"
+  },
+  "devDependencies": {
+    "@sonsu-lee/oxlint-config": "workspace:^",
+    "@typescript-eslint/rule-tester": "8.74.0",
+    "eslint": "10.15.0",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:ts6",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0 || ^10.0.0",
+    "typescript": ">=4.8.4 <6.1.0"
+  }
+}

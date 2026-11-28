@@ -32,6 +32,10 @@ TypeScript と型情報を使うルールが標準で有効になり、これら
 | --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint プリセットの factory |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Oxlint が JS プラグインとして実行する自作ルール |
+| [`@sonsu-lee/eslint-config`](packages/eslint-config) | 型情報を使う自作ルール向けの ESLint flat config |
+| [`@sonsu-lee/eslint-plugin`](packages/eslint-plugin) | `no-ignored-rejection` などの型情報を使うルール |
+
+ESLint が必要なのは、型情報を使う自作ルールを利用するときだけです。Oxlint は組み込みの型付きルールを単独で実行できます。
 
 パッケージの構成は [ARCHITECTURE.md](ARCHITECTURE.md)、設計判断の理由は [docs/decisions](docs/decisions) にあります（英語）。
 

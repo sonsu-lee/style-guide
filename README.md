@@ -32,6 +32,10 @@ TypeScript with type-aware rules is on by default, which needs `oxlint-tsgolint`
 | --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint preset factory |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Custom lint rules, run by Oxlint as a JS plugin |
+| [`@sonsu-lee/eslint-config`](packages/eslint-config) | ESLint flat config for custom rules that read types |
+| [`@sonsu-lee/eslint-plugin`](packages/eslint-plugin) | Typed rules, including `no-ignored-rejection` |
+
+Install ESLint only for custom rules that read types. Oxlint runs its built-in type-aware rules without ESLint.
 
 How the packages fit together: [ARCHITECTURE.md](ARCHITECTURE.md). Why they are built this way: [docs/decisions](docs/decisions).
 

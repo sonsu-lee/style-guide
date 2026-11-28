@@ -32,6 +32,10 @@ TypeScript와 타입 정보가 필요한 규칙이 기본으로 켜지며, 이 �
 | --- | --- |
 | [`@sonsu-lee/oxlint-config`](packages/oxlint-config) | Oxlint 프리셋을 만드는 factory 함수 |
 | [`@sonsu-lee/oxlint-plugin`](packages/oxlint-plugin) | Oxlint가 JS 플러그인으로 실행하는 커스텀 규칙 |
+| [`@sonsu-lee/eslint-config`](packages/eslint-config) | 타입 정보를 읽는 커스텀 규칙용 ESLint flat config |
+| [`@sonsu-lee/eslint-plugin`](packages/eslint-plugin) | `no-ignored-rejection` 등 타입 기반 규칙 |
+
+타입 정보를 읽는 커스텀 규칙을 쓸 때만 ESLint를 설치하세요. Oxlint의 내장 타입 기반 규칙에는 ESLint가 필요하지 않습니다.
 
 패키지 구조는 [ARCHITECTURE.md](ARCHITECTURE.md)(영어)에, 설계를 이렇게 정한 이유는 [docs/decisions](docs/decisions)(영어)에 있습니다.
 

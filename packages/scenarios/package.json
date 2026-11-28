@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc && tsc -p apps/service && tsc -p apps/react && tsc -p apps/nest && tsc -p apps/warnings && tsc -p apps/next && tsc -p apps/query"
+    "typecheck": "tsc && tsc -p apps/service && tsc -p apps/react && tsc -p apps/nest && tsc -p apps/warnings && tsc -p apps/next && tsc -p apps/query && tsc -p apps/machines"
   },
   "devDependencies": {
     "@sonsu-lee/eslint-config": "workspace:^",
@@ -15,6 +15,7 @@
     "@types/node": "catalog:",
     "@types/react": "19.3.3",
     "@types/react-dom": "19.3.0",
+    "@xstate/react": "6.1.0",
     "eslint": "10.15.0",
     "next": "16.4.6",
     "oxlint": "catalog:",
@@ -22,6 +23,7 @@
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "typescript": "catalog:ts6",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "xstate": "5.33.4"
   }
 }

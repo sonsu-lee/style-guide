@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { nextjs } from './configs/nextjs.ts';
 import { react } from './configs/react.ts';
+import { xstate } from './configs/xstate.ts';
 import { preset } from './preset.ts';
 
 describe('preset', () => {
@@ -61,6 +62,12 @@ describe('preset', () => {
     expect(preset({ tanstackQuery: true }).extends).toContain(react);
     expect(() => preset({ tanstackQuery: true, react: false })).toThrow(/react/u);
     expect(JSON.stringify(preset().extends)).not.toContain('@tanstack/query');
+  });
+
+  it('enables XState without React', () => {
+    const config = preset({ xstate: true });
+    expect(config.extends).toContain(xstate);
+    expect(config.extends).not.toContain(react);
   });
 
   it('rejects turning off a profile that another option needs', () => {

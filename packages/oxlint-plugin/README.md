@@ -35,6 +35,11 @@ With Yarn PnP, Oxlint cannot resolve a plugin by package name. Pass the resolved
 | [no-double-assertion](docs/rules/no-double-assertion.md) | Disallow chaining type assertions, such as `value as unknown as Foo` |
 | [prefer-named-conditions](docs/rules/prefer-named-conditions.md) | Review mixed operators, inline callbacks, and groups of unnamed predicates |
 | [require-effect-reason](docs/rules/require-effect-reason.md) | Require a synchronization reason on React Effect calls |
+| [no-machine-context-mutation](docs/rules/no-machine-context-mutation.md) | Report writes to machine context |
+| [no-machine-in-render](docs/rules/no-machine-in-render.md) | Report machine or actor creation directly during render |
+| [no-unstable-actor-selector](docs/rules/no-unstable-actor-selector.md) | Review object or array selectors without a comparator |
+| [prefer-machine-setup](docs/rules/prefer-machine-setup.md) | Review bare `createMachine` calls |
+| [require-invoke-on-error](docs/rules/require-invoke-on-error.md) | Review invokes with a success transition but no failure transition |
 
 ## Contributing
 

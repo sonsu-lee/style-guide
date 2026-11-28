@@ -46,6 +46,7 @@ Returns a complete Oxlint root config. Oxlint's `correctness`, `suspicious`, `pe
 | `react` | `false` | React and React Hooks plugin |
 | `nextjs` | `false` | Next.js core-web-vitals rules; enables React |
 | `tanstackQuery` | `false` | Enables React and two cache rules. Install the peer with `pnpm add -D @tanstack/eslint-plugin-query` |
+| `xstate` | `false` | Five XState v5 machine rules; independent of React |
 | `vitest` | `false` | Vitest plugin for `*.test.*`, `*.spec.*`, and `*.e2e-spec.*` files |
 | `nestjs` | `false` | Allows code the NestJS CLI generates. Needs `typescript` and turns on `node` |
 
@@ -209,6 +210,48 @@ useEffect(() => connect(roomId), [roomId]);
 **Profile and severity.** `tanstackQuery`, error for `exhaustive-deps` and `stable-query-client`.
 
 **What it cannot see.** `no-void-query-fn` needs types; Oxlint does not supply them to JS plugins, so the profile does not enable it.
+
+### XState
+
+**Failure it prevents.** Creating an actor during render can leave actors behind. Mutating context changes what earlier snapshots show. An unhandled reservation failure can leave the checkout screen waiting for a transition.
+
+**Reported:** `context.items.push(item)` inside `assign`; `createActor(machine)` directly inside a component.
+
+**Allowed:** return a new array from `assign`; create the machine at module scope and pass changing values as `input`.
+
+**Profile and severity.** `xstate` reports mutation and creation during render as errors. It warns about bare `createMachine`, an invoke with `onDone` but no `onError`, and an object or array selector without a comparator.
+
+**What it cannot see.** Re-exports, mutation through a context alias, and selectors on actor contexts imported from another file are outside these syntax checks.
+
+Projects that reserve state management for XState can restrict competing packages in their root config:
+
+```ts
+preset(
+  { xstate: true },
+  {
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            'redux',
+            '@reduxjs/toolkit',
+            'react-redux',
+            'zustand',
+            'jotai',
+            'recoil',
+            'mobx',
+            'mobx-react-lite',
+            'valtio',
+          ],
+        },
+      ],
+    },
+  },
+);
+```
+
+The profile does not impose this list: a project's root `no-restricted-imports` replaces the whole inherited rule.
 
 ## Contributing
 

@@ -1,0 +1,33 @@
+# require-invoke-on-error
+
+Give an invoked actor a failure transition when its invoke handles success.
+
+## Rule details
+
+An actor failure without an `onError` transition propagates out of the invocation. A checkout can then stop in its loading state instead of moving to a state that can show the failure or retry. The rule reports an inline invoke entry with `src` and `onDone` but no `onError` in the machine config or one of its nested states.
+
+Examples of code that this rule reports:
+
+```ts
+import { setup } from 'xstate';
+
+setup({}).createMachine({
+  invoke: { src: 'reserveStock', onDone: 'reserved' },
+});
+```
+
+Examples of code that this rule allows:
+
+```ts
+import { setup } from 'xstate';
+
+setup({}).createMachine({
+  invoke: { src: 'submitOrder', onDone: 'submitted', onError: 'failed' },
+});
+```
+
+## What the rule cannot see
+
+The rule recognizes direct XState `createMachine` imports and `.createMachine()` on an XState `setup()` result. It follows a same-file `const` holding a setup, including `.extend()` chains and an inline `setup(...).extend(...)` receiver. It does not resolve configuration objects passed by variable, spreads, computed properties, or re-exported factories.
+
+It does not follow imported setup objects or setup values held in mutable variables or wrapped in type assertions.

@@ -28,7 +28,20 @@ function rejectionHandler(
   return null;
 }
 
-function constantFallback(expression: TSESTree.Expression | null): Fallback | null {
+// A type assertion has no runtime effect, so it can hide the literal fallback underneath.
+function unwrapTypeAssertions(expression: TSESTree.Expression): TSESTree.Expression {
+  if (
+    expression.type === AST_NODE_TYPES.TSAsExpression ||
+    expression.type === AST_NODE_TYPES.TSTypeAssertion ||
+    expression.type === AST_NODE_TYPES.TSNonNullExpression
+  ) {
+    return unwrapTypeAssertions(expression.expression);
+  }
+  return expression;
+}
+
+function constantFallback(value: TSESTree.Expression | null): Fallback | null {
+  const expression = value === null ? null : unwrapTypeAssertions(value);
   if (expression === null) return 'undefined';
   if (expression.type === AST_NODE_TYPES.Identifier && expression.name === 'undefined') {
     return 'undefined';

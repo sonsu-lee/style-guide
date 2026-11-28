@@ -51,6 +51,11 @@ export function queueRegionWarmup(region: string): void {
   warmCache(region).catch(reportWarmupFailure);
 }
 
+export async function refreshUser(id: string): Promise<void> {
+  // expect: error sonsu-lee-eslint/no-ignored-rejection -- The assertion hides a fallback that nothing reads.
+  await findUser(id).catch(() => null as User | null);
+}
+
 export function optionalCacheSchema(schema: CacheSchema): CacheSchema {
   return schema.catch(() => undefined);
 }

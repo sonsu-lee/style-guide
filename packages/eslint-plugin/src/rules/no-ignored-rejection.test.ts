@@ -114,5 +114,17 @@ tester.run('no-ignored-rejection', noIgnoredRejection, {
       ),
       errors: [{ messageId: 'discardedFallback', data: { value: 'undefined' } }],
     },
+    {
+      ...withOrderService('await saveOrder(id).catch(() => null as { id: string } | null);'),
+      errors: [{ messageId: 'discardedFallback', data: { value: 'null' } }],
+    },
+    {
+      ...withOrderService('await saveOrder(id).catch(() => <null>null);'),
+      errors: [{ messageId: 'discardedFallback', data: { value: 'null' } }],
+    },
+    {
+      ...withOrderService('await saveOrder(id).catch(() => undefined!);'),
+      errors: [{ messageId: 'discardedFallback', data: { value: 'undefined' } }],
+    },
   ],
 });

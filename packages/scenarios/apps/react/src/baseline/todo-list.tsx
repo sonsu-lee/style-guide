@@ -20,6 +20,7 @@ export function TodoList({ todos, visible }: { todos: Todo[]; visible: boolean }
     return (
       <section>
         <h2>{heading}</h2>
+        <img src="/tasks.png" alt="" />
         <ul>
           {todos.map((todo) => (
             <li key={todo.id}>{todo.title}</li>

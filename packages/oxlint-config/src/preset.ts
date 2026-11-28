@@ -2,6 +2,7 @@ import type { OxlintConfig } from 'oxlint';
 
 import { base } from './configs/base.ts';
 import { nestjs } from './configs/nestjs.ts';
+import { nextjs } from './configs/nextjs.ts';
 import { node } from './configs/node.ts';
 import { react } from './configs/react.ts';
 import { typeAware } from './configs/type-aware.ts';
@@ -23,8 +24,10 @@ export interface Options {
   node?: boolean;
   /** Browser globals. */
   browser?: boolean;
-  /** React and React Hooks rules. */
+  /** React and React Hooks rules. Turned on by nextjs. */
   react?: boolean;
+  /** Next.js core-web-vitals severities. Turns on react. */
+  nextjs?: boolean;
   /** Vitest rules for test files. */
   vitest?: boolean;
   /** Adjusts the TypeScript rules for NestJS. Needs `typescript` and turns on `node`. */
@@ -36,15 +39,20 @@ export interface Options {
 // explicit `false` for one of those is a mistake.
 function selectProfiles(options: Options): Required<Omit<Options, 'ignores'>> {
   const isTypeScript = options.typescript ?? true;
+  const needsReact = options.nextjs ?? false;
   const selected = {
     typescript: isTypeScript,
     typeAware: options.typeAware ?? isTypeScript,
     node: options.node ?? options.nestjs ?? false,
     browser: options.browser ?? false,
-    react: options.react ?? false,
+    react: options.react ?? needsReact,
+    nextjs: options.nextjs ?? false,
     vitest: options.vitest ?? false,
     nestjs: options.nestjs ?? false,
   };
+  if (!selected.react && needsReact) {
+    throw new Error('nextjs needs the react profile, but react is false.');
+  }
   if (!selected.typescript && (selected.typeAware || selected.nestjs)) {
     throw new Error('typeAware and nestjs need the typescript profile, but typescript is false.');
   }
@@ -72,6 +80,7 @@ export function preset(options: Options = {}, userConfig: OxlintConfig = {}): Ox
     [isTypeAware, typeAware],
     [selected.node, node],
     [selected.react, react],
+    [selected.nextjs, nextjs],
     [selected.vitest, vitest],
     [selected.nestjs, nestjs],
   ];

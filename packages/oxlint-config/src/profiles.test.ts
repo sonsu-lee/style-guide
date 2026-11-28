@@ -63,6 +63,7 @@ const fixtures: Record<string, string> = {
   'src/exports.js': 'exports = {};\n',
   'src/process.js': 'process = {};\n',
   'src/window.js': 'window = {};\n',
+  'src/page.jsx': 'export const hero = <img src="/hero.png" alt="" />;\n',
 };
 
 let projectDir: string;
@@ -163,6 +164,15 @@ const cases: { options: Options; expected: string[] }[] = [
       'src/process.js eslint(no-global-assign)',
       'src/stub.test.ts sonsu-lee(no-double-assertion)',
       'src/types.ts typescript(no-wrapper-object-types)',
+    ],
+  },
+  {
+    options: { typescript: false, nextjs: true },
+    expected: [
+      'src/base.js unicorn(no-new-array)',
+      'src/component.tsx react-hooks(rules-of-hooks)',
+      'src/page.jsx next(no-img-element)',
+      'src/stub.test.ts sonsu-lee(no-double-assertion)',
     ],
   },
 ];

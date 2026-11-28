@@ -28,6 +28,7 @@
     "@sonsu-lee/oxlint-plugin": "workspace:^"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "5.108.4",
     "@types/node": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
@@ -36,6 +37,12 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.108.0",
     "oxlint": "^1.90.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/eslint-plugin-query": {
+      "optional": true
+    }
   }
 }

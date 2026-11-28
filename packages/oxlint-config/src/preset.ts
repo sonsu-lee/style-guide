@@ -5,6 +5,7 @@ import { nestjs } from './configs/nestjs.ts';
 import { nextjs } from './configs/nextjs.ts';
 import { node } from './configs/node.ts';
 import { react } from './configs/react.ts';
+import { tanstackQuery } from './configs/tanstack-query.ts';
 import { typeAware } from './configs/type-aware.ts';
 import { typescript } from './configs/typescript.ts';
 import { vitest } from './configs/vitest.ts';
@@ -24,10 +25,12 @@ export interface Options {
   node?: boolean;
   /** Browser globals. */
   browser?: boolean;
-  /** React and React Hooks rules. Turned on by nextjs. */
+  /** React and React Hooks rules. Turned on by nextjs and tanstackQuery. */
   react?: boolean;
   /** Next.js core-web-vitals severities. Turns on react. */
   nextjs?: boolean;
+  /** TanStack Query rules for React; needs @tanstack/eslint-plugin-query. Turns on react. */
+  tanstackQuery?: boolean;
   /** Vitest rules for test files. */
   vitest?: boolean;
   /** Adjusts the TypeScript rules for NestJS. Needs `typescript` and turns on `node`. */
@@ -39,7 +42,7 @@ export interface Options {
 // explicit `false` for one of those is a mistake.
 function selectProfiles(options: Options): Required<Omit<Options, 'ignores'>> {
   const isTypeScript = options.typescript ?? true;
-  const needsReact = options.nextjs ?? false;
+  const needsReact = (options.nextjs ?? false) || (options.tanstackQuery ?? false);
   const selected = {
     typescript: isTypeScript,
     typeAware: options.typeAware ?? isTypeScript,
@@ -47,11 +50,12 @@ function selectProfiles(options: Options): Required<Omit<Options, 'ignores'>> {
     browser: options.browser ?? false,
     react: options.react ?? needsReact,
     nextjs: options.nextjs ?? false,
+    tanstackQuery: options.tanstackQuery ?? false,
     vitest: options.vitest ?? false,
     nestjs: options.nestjs ?? false,
   };
   if (!selected.react && needsReact) {
-    throw new Error('nextjs needs the react profile, but react is false.');
+    throw new Error('nextjs and tanstackQuery need the react profile, but react is false.');
   }
   if (!selected.typescript && (selected.typeAware || selected.nestjs)) {
     throw new Error('typeAware and nestjs need the typescript profile, but typescript is false.');
@@ -75,18 +79,19 @@ export function preset(options: Options = {}, userConfig: OxlintConfig = {}): Ox
 
   // 2. Combine the inherited configs. Later configs win, so a framework profile comes after the
   //    language and runtime profiles it adjusts, and user extends go last so they take precedence.
-  const profiles: [boolean, OxlintConfig][] = [
-    [selected.typescript, typescript],
-    [isTypeAware, typeAware],
-    [selected.node, node],
-    [selected.react, react],
-    [selected.nextjs, nextjs],
-    [selected.vitest, vitest],
-    [selected.nestjs, nestjs],
+  const profiles: [boolean, () => OxlintConfig][] = [
+    [selected.typescript, () => typescript],
+    [isTypeAware, () => typeAware],
+    [selected.node, () => node],
+    [selected.react, () => react],
+    [selected.nextjs, () => nextjs],
+    [selected.tanstackQuery, tanstackQuery],
+    [selected.vitest, () => vitest],
+    [selected.nestjs, () => nestjs],
   ];
   const extendsConfigs: OxlintConfig[] = [
     base,
-    ...profiles.filter(([isSelected]) => isSelected).map(([, config]) => config),
+    ...profiles.filter(([isSelected]) => isSelected).map(([, build]) => build()),
     ...(userConfig.extends ?? []),
   ];
 

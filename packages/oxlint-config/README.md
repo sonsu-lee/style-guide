@@ -45,6 +45,7 @@ Returns a complete Oxlint root config. Oxlint's `correctness`, `suspicious`, `pe
 | `browser` | `false` | Browser globals |
 | `react` | `false` | React and React Hooks plugin |
 | `nextjs` | `false` | Next.js core-web-vitals rules; enables React |
+| `tanstackQuery` | `false` | Enables React and two cache rules. Install the peer with `pnpm add -D @tanstack/eslint-plugin-query` |
 | `vitest` | `false` | Vitest plugin for `*.test.*`, `*.spec.*`, and `*.e2e-spec.*` files |
 | `nestjs` | `false` | Allows code the NestJS CLI generates. Needs `typescript` and turns on `node` |
 
@@ -196,6 +197,18 @@ useEffect(() => connect(roomId), [roomId]);
 | `no-sync-scripts`, `no-html-link-for-pages`, `no-head-import-in-document` | Error    |
 
 **What it cannot see.** This is not the full `eslint-config-next`: it does not add jsx-a11y or import rules. It sets no global environment because server and client files share a project.
+
+### TanStack Query
+
+**Failure it prevents.** Orders with different IDs share a cache entry if the query key omits the ID. Creating a new client on render discards that cache.
+
+**Reported:** `useQuery({ queryKey: ['order'], queryFn: () => fetchOrder(orderId) })`.
+
+**Allowed:** add `orderId` to the key and keep the `QueryClient` at module scope or in a lazy state initializer.
+
+**Profile and severity.** `tanstackQuery`, error for `exhaustive-deps` and `stable-query-client`.
+
+**What it cannot see.** `no-void-query-fn` needs types; Oxlint does not supply them to JS plugins, so the profile does not enable it.
 
 ## Contributing
 

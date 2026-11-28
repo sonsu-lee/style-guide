@@ -64,6 +64,8 @@ const fixtures: Record<string, string> = {
   'src/process.js': 'process = {};\n',
   'src/window.js': 'window = {};\n',
   'src/page.jsx': 'export const hero = <img src="/hero.png" alt="" />;\n',
+  'src/orders-query.jsx':
+    "import { useQuery } from '@tanstack/react-query';\nexport function useOrder(orderId) { return useQuery({ queryKey: ['order'], queryFn: () => fetch(orderId) }); }\n",
 };
 
 let projectDir: string;
@@ -172,6 +174,16 @@ const cases: { options: Options; expected: string[] }[] = [
       'src/base.js unicorn(no-new-array)',
       'src/component.tsx react-hooks(rules-of-hooks)',
       'src/page.jsx next(no-img-element)',
+      'src/stub.test.ts sonsu-lee(no-double-assertion)',
+    ],
+  },
+  {
+    options: { typescript: false, tanstackQuery: true },
+    expected: [
+      'src/base.js unicorn(no-new-array)',
+      'src/component.tsx react(jsx-no-target-blank)',
+      'src/component.tsx react-hooks(rules-of-hooks)',
+      'src/orders-query.jsx @tanstack/query(exhaustive-deps)',
       'src/stub.test.ts sonsu-lee(no-double-assertion)',
     ],
   },

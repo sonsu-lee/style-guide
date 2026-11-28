@@ -82,16 +82,15 @@ export function preset(options: Options = {}, userConfig: OxlintConfig = {}): Ox
   ];
 
   // 3. Layer user values over the defaults for fields that are not inherited. User values win.
+  const env: NonNullable<OxlintConfig['env']> = {};
+  if (selected.node) env.node = true;
+  if (selected.browser) env.browser = true;
   return {
     ...userConfig,
     // An empty root list removes Oxlint's default plugins; each config in `extends` adds its own.
     plugins: userConfig.plugins ?? [],
     extends: extendsConfigs,
-    env: {
-      ...(selected.node ? { node: true } : {}),
-      ...(selected.browser ? { browser: true } : {}),
-      ...userConfig.env,
-    },
+    env: { ...env, ...userConfig.env },
     ignorePatterns: [
       ...defaultIgnores,
       ...(options.ignores ?? []),

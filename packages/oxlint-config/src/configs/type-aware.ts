@@ -22,10 +22,11 @@ export const typeAware: OxlintConfig = {
     // `pedantic` turns this on with defaults that allow numbers in conditions. Numbers are not
     // allowed here because `0` is a real value that is easy to treat as missing, and React renders
     // `{count && <List />}` as `0`. Strings stay allowed: `""` is their only falsy value, and an
-    // empty string usually means missing. Nullable booleans are allowed as in antfu/eslint-config.
+    // empty string usually means missing. For nullable booleans, `enabled === true` and
+    // `enabled ?? fallback` say whether a missing value counts as off.
     'typescript/strict-boolean-expressions': [
       'error',
-      { allowNumber: false, allowNullableBoolean: true },
+      { allowNumber: false, allowNullableBoolean: false },
     ],
     // Reports every parameter whose type is not deeply readonly, including ordinary option objects,
     // library types, and NestJS constructor injection. typescript-eslint keeps it out of every

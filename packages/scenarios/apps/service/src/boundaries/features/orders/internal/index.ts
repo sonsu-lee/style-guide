@@ -1,0 +1,1 @@
+export { discountedTotal } from './pricing';

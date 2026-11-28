@@ -253,6 +253,42 @@ preset(
 
 The profile does not impose this list: a project's root `no-restricted-imports` replaces the whole inherited rule.
 
+## Import boundaries
+
+Projects own their restricted paths. Use `paths` to prevent callers from bypassing an SDK wrapper or importing a retired package. Use `patterns` to keep another feature's internal modules private.
+
+```ts
+preset(
+  { node: true },
+  {
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@/vendor/analytics-sdk',
+              message: 'Send events through @/logging/track so every event is masked the same way.',
+            },
+          ],
+          patterns: [
+            {
+              group: ['@/features/*/internal', '@/features/*/internal/**'],
+              message: 'Import from the feature entry point, for example @/features/orders.',
+            },
+          ],
+        },
+      ],
+    },
+    overrides: [
+      { files: ['src/boundaries/logging/**'], rules: { 'no-restricted-imports': 'off' } },
+    ],
+  },
+);
+```
+
+The rule compares import strings: a relative path is not the same as an alias, and a `paths` entry matches the whole specifier, so cover subpaths with `patterns`. Root rules replace the entire inherited entry, including its path list. The example maps `@/*` to `src/boundaries/*`; override `files` are paths relative to the config, not aliases, and disabling the rule there also lifts the feature pattern. For APIs whose declarations you own, `@deprecated` also lets `typescript/no-deprecated` report use of retired symbols.
+
 ## Contributing
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

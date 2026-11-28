@@ -51,6 +51,13 @@ export function queueRegionWarmup(region: string): void {
   warmCache(region).catch(reportWarmupFailure);
 }
 
+export async function refreshUserWithComment(id: string): Promise<void> {
+  // expect: error sonsu-lee-eslint/no-ignored-rejection -- A comment-only handler still discards the rejection.
+  await findUser(id).catch(() => {
+    /* no recovery */
+  });
+}
+
 export async function refreshUser(id: string): Promise<void> {
   // expect: error sonsu-lee-eslint/no-ignored-rejection -- The assertion hides a fallback that nothing reads.
   await findUser(id).catch(() => null as User | null);

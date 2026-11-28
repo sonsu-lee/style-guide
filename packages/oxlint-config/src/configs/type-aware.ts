@@ -3,6 +3,22 @@ import type { OxlintConfig } from 'oxlint';
 export const typeAware: OxlintConfig = {
   plugins: ['typescript'],
   rules: {
+    // `void` discards the promise without handling its rejection.
+    'typescript/no-floating-promises': ['error', { ignoreVoid: false }],
+    // strict-void-return covers callback positions, but not inherited interface signatures.
+    'typescript/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: {
+          arguments: false,
+          attributes: false,
+          properties: false,
+          returns: false,
+          variables: false,
+          inheritedMethods: true,
+        },
+      },
+    ],
     // `pedantic` turns this on with defaults that allow numbers in conditions. Numbers are not
     // allowed here because `0` is a real value that is easy to treat as missing, and React renders
     // `{count && <List />}` as `0`. Strings stay allowed: `""` is their only falsy value, and an

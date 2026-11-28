@@ -60,6 +60,7 @@ An extended config with `plugins: []` adds nothing. ESLint core rules stayed ava
 - `typescript/ban-types` is deprecated and reports `String` together with `typescript/no-wrapper-object-types`. `react/hooks` overlaps with `react/rules-of-hooks`, and `react/react-in-jsx-scope` reports JSX without `React` in scope; both are in `suspicious`. (experiment, docs)
 - `--print-config` shows a rule turned off in an extended config as `"allow"`, not as a missing key. (experiment)
 - `vitest/expect-expect` with `assertFunctionNames: ['request.**.expect']` accepts supertest chains such as `request(server).get('/').expect(200)`. (experiment)
+- An unawaited call and, with `ignoreVoid: false`, a voided promise report `typescript(no-floating-promises)`. On async `forEach` callbacks and JSX event handlers, `checksVoidReturn: false` removes the duplicate `typescript(no-misused-promises)` without suppressing `typescript(strict-void-return)`. (experiment)
 
 ## JS plugins
 

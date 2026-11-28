@@ -132,6 +132,18 @@ return cached ?? loadFromDatabase(key);
 
 **What it cannot see.** `Boolean({ ok: false })` is true. Read `.ok` when the result object carries a success flag. Numeric conversion such as `+quantityText` remains allowed.
 
+### Complex inline conditions
+
+**Failure it prevents.** A reviewer can miss which checks apply to an administrator and which apply only to the owner.
+
+**Reported:** `if (isAdmin || (ownerId === userId && !lockedAt))`.
+
+**Allowed:** `if (isAdmin || canEditOwnOrder)`; a two-sided range check such as `price >= min && price <= max`.
+
+**Profile and severity.** Base, warning. Keep a short-circuit check inline if extracting it would evaluate a costly callback early and a helper would obscure the order.
+
+**What it cannot see.** The rule does not judge names or know what a callback costs. It does not rewrite the expression.
+
 ## Contributing
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md).

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc && tsc -p apps/service && tsc -p apps/react && tsc -p apps/nest"
+    "typecheck": "tsc && tsc -p apps/service && tsc -p apps/react && tsc -p apps/nest && tsc -p apps/warnings"
   },
   "devDependencies": {
     "@sonsu-lee/eslint-config": "workspace:^",
